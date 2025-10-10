@@ -47,7 +47,7 @@ export default function Home() {
           <Reveal>
             <div className="relative order-1 md:order-2">
               <img
-                src="/me2.webp"
+                src="https://res.cloudinary.com/ddivqszbt/image/upload/v1746353953/Me_d48ibg.jpg"
                 alt="Photo de BONI Acobe Ange Ulrich"
                 className="w-full h-64 sm:h-72 md:h-80 lg:h-96 object-cover rounded-2xl shadow-xl ring-1 ring-black/5"
                 loading="eager"

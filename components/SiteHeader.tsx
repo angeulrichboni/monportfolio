@@ -66,7 +66,7 @@ export function SiteHeader() {
       />
 
       <div className="relative container h-full flex items-center justify-between px-6">
-        <Link href="#accueil" className="font-display font-bold text-sky-700">MonPortfolio</Link>
+        <Link href="#accueil" className="font-display font-bold text-sky-700">B.A.A.U</Link>
         <nav className="hidden md:flex gap-5 text-sm text-gray-700 dark:text-gray-300">
           <Link href="#a-propos" className="hover:text-sky-600">À propos</Link>
           <Link href="#competences" className="hover:text-sky-600">Compétences</Link>

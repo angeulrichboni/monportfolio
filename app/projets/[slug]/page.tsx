@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { projects } from "../../../data/projects";
+import { MediaGallery } from "../../../components/MediaGallery";
 
 type Params = { params: Promise<{ slug: string }> };
 
@@ -41,31 +42,40 @@ export default async function ProjectPage({ params }: Params) {
 
         <div className="mt-6 grid gap-6 md:grid-cols-3">
           <div className="md:col-span-2 space-y-4">
+            {project.media && project.media.length > 0 && (
+              <div className="card">
+                <h3 className="font-semibold">Galerie</h3>
+                <MediaGallery media={project.media} title={project.title} />
+              </div>
+            )}
             <div className="card">
               <h2 className="font-semibold">Contexte & Solution</h2>
               <p className="mt-2 text-sm text-gray-700 dark:text-gray-200">
                 {project.content ?? "Description détaillée à venir."}
               </p>
             </div>
-            {project.media && project.media.length > 0 && (
-              <div className="card">
-                <h3 className="font-semibold">Galerie</h3>
-                <div className="mt-3 grid gap-3 sm:grid-cols-2">
-                  {project.media.map((m, i) => (
-                    m.type === "image" ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img key={i} src={m.src} alt={m.alt ?? project.title} className="w-full h-56 object-cover rounded" />
-                    ) : (
-                      <video key={i} controls className="w-full rounded">
-                        <source src={m.src} />
-                      </video>
-                    )
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
           <aside className="space-y-4">
+            {project.isteam && project.team && project.team.length > 0 && (
+              <div className="card">
+                <h3 className="font-semibold">Équipe</h3>
+                <ul className="mt-2 space-y-2 text-sm">
+                  {project.team.map((m) => (
+                    <li key={m.name} className="flex flex-col">
+                      <span className="font-medium">{m.name}</span>
+                      <span className="text-xs text-gray-600 dark:text-gray-400 flex gap-3">
+                        {m.github && (
+                          <Link href={m.github} target="_blank" className="hover:text-sky-600">GitHub</Link>
+                        )}
+                        {m.portfolio && (
+                          <Link href={m.portfolio} target="_blank" className="hover:text-sky-600">Portfolio</Link>
+                        )}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
             <div className="card">
               <h3 className="font-semibold">Stack</h3>
               <ul className="mt-2 flex flex-wrap gap-2 text-xs">

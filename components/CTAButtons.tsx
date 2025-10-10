@@ -7,7 +7,7 @@ export function CTAButtons() {
         Télécharger CV
       </Link>
       <Link
-        href="https://github.com/your-username"
+        href="https://github.com/angeulrichboni"
         className="btn btn-outline"
         target="_blank"
         rel="noreferrer"
@@ -16,7 +16,7 @@ export function CTAButtons() {
         GitHub
       </Link>
       <Link
-        href="https://www.linkedin.com/in/your-username"
+        href="https://www.linkedin.com/in/acobe-ange-ulrich-boni/"
         className="btn btn-outline"
         target="_blank"
         rel="noreferrer"
