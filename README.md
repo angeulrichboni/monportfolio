@@ -1,3 +1,25 @@
+## i18n notes
+
+This app uses a simple client I18n provider with JSON dictionaries in `locales/en.json` and `locales/fr.json`.
+
+Data-driven sections are being localized progressively:
+
+- About: fully localized via locale keys.
+- Skills: category titles localized via `skills.category.*` keys, while the actual skills list remains language-agnostic.
+- Experience / Projects / Certifications: current data is FR. Components will prefer per-item localized fields when available. The recommended shape is:
+
+```ts
+type Localized = string | { fr: string; en: string }
+type ExperienceItem = {
+	role: Localized;
+	company: Localized;
+	missions: Localized[];
+	// ...
+}
+```
+
+If you migrate data files to this structure, the UI will pick the correct language automatically. Otherwise, it falls back to the original string.
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started

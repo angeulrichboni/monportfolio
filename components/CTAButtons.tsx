@@ -1,10 +1,14 @@
+"use client";
 import Link from "next/link";
+import { useI18n } from "./I18nProvider";
 
 export function CTAButtons() {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { t } = useI18n();
   return (
     <div className="flex flex-wrap gap-3">
       <Link href="/cv.pdf" className="btn btn-primary" prefetch={false}>
-        Télécharger CV
+        {t("cta.downloadCv")}
       </Link>
       <Link
         href="https://github.com/angeulrichboni"
