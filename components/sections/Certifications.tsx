@@ -4,7 +4,6 @@ import { certifications } from "../../data/certifications";
 import { useI18n } from "../I18nProvider";
 
 export function Certifications() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { t, lang } = useI18n();
   function pick(value: unknown): string {
     if (typeof value === "string") return value;

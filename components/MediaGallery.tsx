@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-type Localized = string | { fr: string; en: string };
-type MediaItem = { type: "image" | "video"; src: string; alt?: Localized };
+export type Localized = string | { fr: string; en: string };
+export type MediaItem = { type: "image" | "video"; src: string; alt?: Localized };
 
 function pick(value: unknown, pref: "fr" | "en" = "fr"): string {
   if (typeof value === "string") return value;

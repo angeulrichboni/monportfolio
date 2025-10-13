@@ -1,4 +1,4 @@
-import Link from "next/link";
+import Image from "next/image";
 import { CTAButtons } from "../components/CTAButtons";
 import { Section } from "../components/Section";
 import { About } from "../components/sections/About";
@@ -36,11 +36,13 @@ export default function Home() {
           </Reveal>
           <Reveal>
             <div className="relative order-1 md:order-2">
-              <img
+              <Image
                 src="https://res.cloudinary.com/ddivqszbt/image/upload/v1746353953/Me_d48ibg.jpg"
                 alt="Photo de BONI Acobe Ange Ulrich"
+                width={1200}
+                height={800}
+                priority
                 className="w-full h-64 sm:h-72 md:h-80 lg:h-96 object-cover rounded-2xl shadow-xl ring-1 ring-black/5"
-                loading="eager"
               />
             </div>
           </Reveal>

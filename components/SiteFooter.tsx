@@ -3,7 +3,6 @@ import Link from "next/link";
 import { useI18n } from "./I18nProvider";
 
 export function SiteFooter() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { t } = useI18n();
   return (
     <footer className="mt-16 border-t border-gray-200 dark:border-gray-800">

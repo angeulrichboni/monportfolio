@@ -15,9 +15,6 @@ function pick(value: unknown, lang: "fr" | "en"): string {
 }
 
 export function Experience() {
-  // Experience is a server component by default; make it client to use hook if needed.
-  // However, this file does not have "use client". Add translation by small wrapper or inline? For simplicity, use a client hook here.
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { t, lang } = useI18n();
   return (
     <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

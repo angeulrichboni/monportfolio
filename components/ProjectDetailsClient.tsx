@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useI18n } from "./I18nProvider";
-import { MediaGallery } from "./MediaGallery";
+import { MediaGallery, Localized, MediaItem } from "./MediaGallery";
 import type { Project } from "../data/projects";
 
 function pick(value: unknown, lang: "fr" | "en"): string {
@@ -31,7 +31,7 @@ export function ProjectDetailsClient({ project }: { project: Project }) {
           {project.media && project.media.length > 0 && (
             <div className="card">
               <h3 className="font-semibold">{t("project.gallery")}</h3>
-              <MediaGallery media={project.media as any} title={project.title as any} />
+              <MediaGallery media={project.media as MediaItem[]} title={project.title as Localized} />
             </div>
           )}
           <div className="card">

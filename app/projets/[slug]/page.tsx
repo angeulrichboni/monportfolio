@@ -3,7 +3,6 @@ import { cookies } from "next/headers";
 import frMessages from "../../../locales/fr.json" assert { type: "json" };
 import enMessages from "../../../locales/en.json" assert { type: "json" };
 import { projects } from "../../../data/projects";
-import { MediaGallery } from "../../../components/MediaGallery";
 import { ProjectDetailsClient } from "../../../components/ProjectDetailsClient";
 
 type Params = { params: Promise<{ slug: string }>; searchParams?: Promise<Record<string, string | string[] | undefined>> };
@@ -36,7 +35,7 @@ export async function generateMetadata({ params, searchParams }: Params) {
   const cookieStore = await cookies();
   const qLang = (Array.isArray(q.lang) ? q.lang[0] : q.lang) as "fr" | "en" | undefined;
   const lang = (qLang ?? (cookieStore.get("lang")?.value as "fr" | "en")) ?? "fr";
-  const dict = (lang === "en" ? (enMessages as any) : (frMessages as any)) as Dict;
+  const dict = (lang === "en" ? (enMessages as unknown) : (frMessages as unknown)) as Dict;
   if (!project) return { title: `${tKey(dict, "project.notFound.title")} | ${tKey(dict, "section.projects.title")}` };
   return {
     title: `${pickSSR(project.title)} | ${tKey(dict, "section.projects.title")}`,
@@ -50,7 +49,7 @@ export default async function ProjectPage({ params, searchParams }: Params) {
   const cookieStore = await cookies();
   const qLang = (Array.isArray(q.lang) ? q.lang[0] : q.lang) as "fr" | "en" | undefined;
   const lang = (qLang ?? (cookieStore.get("lang")?.value as "fr" | "en")) ?? "fr";
-  const dict = (lang === "en" ? (enMessages as any) : (frMessages as any)) as Dict;
+  const dict = (lang === "en" ? (enMessages as unknown) : (frMessages as unknown)) as Dict;
   const project = projects.find((p) => p.slug === slug);
   if (!project) {
     return (
@@ -67,7 +66,7 @@ export default async function ProjectPage({ params, searchParams }: Params) {
   return (
     <main className="section">
       {/* SSR metadata + static content above could be added if needed. Render client section for live language switching. */}
-      <ProjectDetailsClient project={project as any} />
+      <ProjectDetailsClient project={project} />
     </main>
   );
 }

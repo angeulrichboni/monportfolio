@@ -24,14 +24,12 @@ export function SiteHeader() {
     if (mql.addEventListener) {
       mql.addEventListener("change", handler);
     } else {
-      // @ts-ignore for older browsers
       mql.addListener(handler);
     }
     return () => {
       if (mql.removeEventListener) {
         mql.removeEventListener("change", handler);
       } else {
-        // @ts-ignore for older browsers
         mql.removeListener(handler);
       }
     };

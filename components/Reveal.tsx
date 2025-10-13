@@ -8,7 +8,7 @@ type Props = PropsWithChildren<{
 }>;
 
 export function Reveal({ as: Tag = "div", delay = 0, className, children }: Props) {
-  const ref = useRef<HTMLDivElement | null>(null);
+  const ref = useRef<HTMLElement | null>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -31,7 +31,9 @@ export function Reveal({ as: Tag = "div", delay = 0, className, children }: Prop
 
   return (
     <Tag
-      ref={ref as any}
+      ref={(node: HTMLElement | null) => {
+        ref.current = node;
+      }}
       className={`reveal ${visible ? "in" : ""} ${className ?? ""}`}
       style={{ transitionDelay: `${delay}s` } as React.CSSProperties}
     >

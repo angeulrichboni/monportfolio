@@ -29,7 +29,6 @@ function barColor(level = 0) {
 }
 
 export function Skills() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { t } = useI18n();
   const grouped = groupByCategory(skills);
 
