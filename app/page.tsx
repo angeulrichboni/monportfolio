@@ -8,6 +8,7 @@ import { Experience } from "../components/sections/Experience";
 import { Certifications } from "../components/sections/Certifications";
 import { Contact } from "../components/sections/Contact";
 import { Reveal } from "../components/Reveal";
+import { HeroCopy } from "../components/HeroCopy";
 
 export default function Home() {
   return (
@@ -24,21 +25,10 @@ export default function Home() {
           aria-hidden
           className="absolute inset-0 -z-10 bg-gradient-to-r from-white/85 to-white/20 dark:from-[#0b1220]/75 dark:to-[#0b1220]/20"
         />
-  <div className="container mx-auto px-6 py-16 sm:py-20 md:py-24 grid gap-8 items-center md:grid-cols-2">
+        <div className="container mx-auto px-6 py-16 sm:py-20 md:py-24 grid gap-8 items-center md:grid-cols-2">
           <Reveal>
             <div className="order-2 md:order-1">
-              <p className="text-sm uppercase tracking-widest text-sky-600 font-semibold">
-                Data Engineer / Big Data Engineer
-              </p>
-              <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight text-gray-900 dark:text-gray-50">
-                BONI Acobe Ange Ulrich
-              </h1>
-              <h2 className="mt-2 text-2xl sm:text-3xl font-display font-bold text-gray-900 dark:text-gray-50">
-                Transformons la donnée brute en valeur.
-              </h2>
-              <p className="mt-4 text-gray-600 dark:text-gray-300 max-w-prose">
-                Étudiant en dernière année de cycle ingénieur en Data Science & IA, spécialisé en Big Data et passionné par l’ingénierie de données massives.
-              </p>
+              <HeroCopy />
               <div className="mt-8">
                 <CTAButtons />
               </div>
@@ -59,37 +49,37 @@ export default function Home() {
 
       {/* Sections */}
       <Reveal>
-        <Section id="a-propos" title="À propos de moi" subtitle="" className="scroll-mt-20">
+        <Section id="a-propos" titleKey="section.about.title" subtitleKey="section.about.subtitle" className="scroll-mt-20">
           <About />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="competences" title="Mes compétences techniques" subtitle="Langages, Big Data, Cloud, Bases de données, Outils" className="scroll-mt-20">
+        <Section id="competences" titleKey="section.skills.title" subtitleKey="section.skills.subtitle" className="scroll-mt-20">
           <Skills />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="projets" title="Projets" subtitle="Sélection de travaux techniques et académiques" className="scroll-mt-20">
+        <Section id="projets" titleKey="section.projects.title" subtitleKey="section.projects.subtitle" className="scroll-mt-20">
           <Projects />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="experiences" title="Expériences" subtitle="Missions et réalisations professionnelles" className="scroll-mt-20">
+        <Section id="experiences" titleKey="section.experience.title" subtitleKey="section.experience.subtitle" className="scroll-mt-20">
           <Experience />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="certifications" title="Certifications" subtitle="Titres et validations de compétences" className="scroll-mt-20">
+        <Section id="certifications" titleKey="section.certifications.title" subtitleKey="section.certifications.subtitle" className="scroll-mt-20">
           <Certifications />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="contact" title="Contactez-moi" subtitle="Discutons de vos besoins data" className="scroll-mt-20">
+        <Section id="contact" titleKey="section.contact.title" subtitleKey="section.contact.subtitle" className="scroll-mt-20">
           <Contact />
         </Section>
       </Reveal>

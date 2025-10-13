@@ -1,4 +1,6 @@
+"use client";
 import { skills, type Skill } from "../../data/skills";
+import { useI18n } from "../I18nProvider";
 
 const categories = [
   "Langages",
@@ -27,6 +29,8 @@ function barColor(level = 0) {
 }
 
 export function Skills() {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const { t } = useI18n();
   const grouped = groupByCategory(skills);
 
   return (
@@ -42,7 +46,7 @@ export function Skills() {
           >
             <header className="px-5 pt-5">
               <h3 className="font-display text-lg font-semibold text-gray-900 dark:text-gray-50">
-                {cat}
+                {t(`skills.category.${cat}`)}
               </h3>
             </header>
             <div className="p-5 pt-4">
