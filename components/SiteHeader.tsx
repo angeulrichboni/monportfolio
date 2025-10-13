@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { useI18n } from "./I18nProvider";
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
@@ -36,6 +37,8 @@ export function SiteHeader() {
     };
   }, []);
 
+  const { lang, setLang, t } = useI18n();
+
   return (
     <header
       className={
@@ -68,13 +71,25 @@ export function SiteHeader() {
       <div className="relative container h-full flex items-center justify-between px-6">
         <Link href="#accueil" className="font-display font-bold text-sky-700">B.A.A.U</Link>
         <nav className="hidden md:flex gap-5 text-sm text-gray-700 dark:text-gray-300">
-          <Link href="#a-propos" className="hover:text-sky-600">À propos</Link>
-          <Link href="#competences" className="hover:text-sky-600">Compétences</Link>
-          <Link href="#projets" className="hover:text-sky-600">Projets</Link>
-          <Link href="#experiences" className="hover:text-sky-600">Expériences</Link>
-          <Link href="#certifications" className="hover:text-sky-600">Certifications</Link>
-          <Link href="#contact" className="hover:text-sky-600">Contact</Link>
+          <Link href="#a-propos" className="hover:text-sky-600">{t("header.about")}</Link>
+          <Link href="#competences" className="hover:text-sky-600">{t("header.skills")}</Link>
+          <Link href="#projets" className="hover:text-sky-600">{t("header.projects")}</Link>
+          <Link href="#experiences" className="hover:text-sky-600">{t("header.experience")}</Link>
+          <Link href="#certifications" className="hover:text-sky-600">{t("header.certifications")}</Link>
+          <Link href="#contact" className="hover:text-sky-600">{t("header.contact")}</Link>
         </nav>
+        {/* Language selector */}
+        <div className="ml-4">
+          <select
+            value={lang}
+            onChange={e => setLang(e.target.value as "fr" | "en")}
+            className="border rounded px-2 py-1 text-sm bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200"
+            aria-label="Choisir la langue"
+          >
+            <option value="fr">{t("lang.fr")}</option>
+            <option value="en">{t("lang.en")}</option>
+          </select>
+        </div>
 
         {/* Mobile hamburger */}
         <button
@@ -124,12 +139,12 @@ export function SiteHeader() {
       >
         <div className="mx-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-[#0b1220]/90 backdrop-blur shadow-lg p-4">
           <div className="flex flex-col gap-3 text-gray-800 dark:text-gray-200 text-sm">
-            <Link href="#a-propos" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">À propos</Link>
-            <Link href="#competences" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">Compétences</Link>
-            <Link href="#projets" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">Projets</Link>
-            <Link href="#experiences" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">Expériences</Link>
-            <Link href="#certifications" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">Certifications</Link>
-            <Link href="#contact" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">Contact</Link>
+            <Link href="#a-propos" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.about")}</Link>
+            <Link href="#competences" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.skills")}</Link>
+            <Link href="#projets" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.projects")}</Link>
+            <Link href="#experiences" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.experience")}</Link>
+            <Link href="#certifications" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.certifications")}</Link>
+            <Link href="#contact" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.contact")}</Link>
           </div>
         </div>
       </div>

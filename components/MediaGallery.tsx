@@ -3,9 +3,22 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-type MediaItem = { type: "image" | "video"; src: string; alt?: string };
+type Localized = string | { fr: string; en: string };
+type MediaItem = { type: "image" | "video"; src: string; alt?: Localized };
 
-export function MediaGallery({ media, title }: { media: MediaItem[]; title: string }) {
+function pick(value: unknown, pref: "fr" | "en" = "fr"): string {
+  if (typeof value === "string") return value;
+  if (value && typeof value === "object") {
+    const v = value as Record<string, unknown>;
+    const loc = v[pref];
+    if (typeof loc === "string") return loc;
+    const fr = v["fr"];
+    if (typeof fr === "string") return fr;
+  }
+  return "";
+}
+
+export function MediaGallery({ media, title }: { media: MediaItem[]; title: Localized }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const scrollYRef = useRef<number | null>(null);
 
@@ -55,12 +68,12 @@ export function MediaGallery({ media, title }: { media: MediaItem[]; title: stri
               type="button"
               onClick={() => setOpenIndex(i)}
               className="relative group overflow-hidden rounded cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-sky-500"
-              aria-label={m.alt ?? `${title} — image ${i + 1}`}
+              aria-label={(pick(m.alt) || pick(title)) + ` — image ${i + 1}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={m.src}
-                alt={m.alt ?? title}
+                alt={pick(m.alt) || pick(title)}
                 className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105"
               />
             </button>
@@ -81,7 +94,7 @@ export function MediaGallery({ media, title }: { media: MediaItem[]; title: stri
             className="fixed inset-0 z-50 flex items-center justify-center"
             role="dialog"
             aria-modal="true"
-            aria-label={media[openIndex].alt ?? title}
+            aria-label={pick(media[openIndex].alt) || pick(title)}
           >
             {/* Backdrop */}
             <button
@@ -95,7 +108,7 @@ export function MediaGallery({ media, title }: { media: MediaItem[]; title: stri
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={media[openIndex].src}
-                alt={media[openIndex].alt ?? title}
+                alt={pick(media[openIndex].alt) || pick(title)}
                 className="max-w-[90vw] max-h-[85vh] object-contain rounded shadow-2xl block"
               />
             </div>
