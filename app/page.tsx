@@ -59,13 +59,13 @@ export default function Home() {
 
       {/* Sections */}
       <Reveal>
-        <Section id="a-propos" title="À propos" className="scroll-mt-20">
+        <Section id="a-propos" title="À propos de moi" subtitle="" className="scroll-mt-20">
           <About />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="competences" title="Compétences" subtitle="Langages, Big Data, Cloud, Bases de données, Outils" className="scroll-mt-20">
+        <Section id="competences" title="Mes compétences techniques" subtitle="Langages, Big Data, Cloud, Bases de données, Outils" className="scroll-mt-20">
           <Skills />
         </Section>
       </Reveal>
@@ -77,19 +77,19 @@ export default function Home() {
       </Reveal>
 
       <Reveal>
-        <Section id="experiences" title="Expériences" className="scroll-mt-20">
+        <Section id="experiences" title="Expériences" subtitle="Missions et réalisations professionnelles" className="scroll-mt-20">
           <Experience />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="certifications" title="Certifications" className="scroll-mt-20">
+        <Section id="certifications" title="Certifications" subtitle="Titres et validations de compétences" className="scroll-mt-20">
           <Certifications />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="contact" title="Contact" className="scroll-mt-20">
+        <Section id="contact" title="Contactez-moi" subtitle="Discutons de vos besoins data" className="scroll-mt-20">
           <Contact />
         </Section>
       </Reveal>

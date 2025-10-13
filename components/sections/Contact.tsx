@@ -26,10 +26,40 @@ export function Contact() {
   }
 
   return (
-    <div>
+    <div className="grid gap-6 md:grid-cols-5">
+      {/* Info panel */}
+      <aside className="card md:col-span-2">
+        <h3 className="font-display font-semibold text-lg">Informations de contact</h3>
+        <ul className="mt-4 space-y-3 text-sm">
+          <li className="flex items-start gap-3">
+            <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-300">@</span>
+            <div>
+              <div className="text-gray-600 dark:text-gray-300">Email</div>
+              {/* <a href="mailto:acobeangeulrich.boni@tek-up.de" className="font-medium hover:text-sky-600">acobeangeulrich.boni@tek-up.de</a> <br /> */}
+              <a href="mailto:acobeangeulrich.boni@tek-up.de" className="font-medium hover:text-sky-600">acobeangeulrich.boni@tek-up.de</a>
+            </div>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-300">☎</span>
+            <div>
+              <div className="text-gray-600 dark:text-gray-300">Téléphone</div>
+              <a href="tel:+216 53 117 212" className="font-medium hover:text-sky-600">+216 53 117 212</a>
+            </div>
+          </li>
+          <li className="flex items-start gap-3">
+            <span className="mt-0.5 inline-flex h-6 w-6 items-center justify-center rounded-full bg-sky-100 dark:bg-sky-900/40 text-sky-700 dark:text-sky-300">📍</span>
+            <div>
+              <div className="text-gray-600 dark:text-gray-300">Localisation</div>
+              <div className="font-medium">Tunisie</div>
+            </div>
+          </li>
+        </ul>
+      </aside>
+
+      {/* Form */}
       <form
         onSubmit={onSubmit}
-        className="card space-y-3 md:max-w-2xl lg:max-w-3xl mx-auto"
+        className="card space-y-3 md:col-span-3"
       >
         <div>
           <label className="block text-sm mb-1">Nom</label>
