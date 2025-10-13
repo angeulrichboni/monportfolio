@@ -15,15 +15,15 @@ export function Section({ id, title, subtitle, className, children }: Props) {
         {(title || subtitle) && (
           <header className="section-header mb-8 text-center">
             {title && (
-              <h2 className="text-2xl sm:text-3xl font-display font-bold text-gray-900 dark:text-gray-50">
+              <h2 className="text-2xl sm:text-3xl font-display font-bold text-sky-700 dark:text-sky-300">
                 {title}
               </h2>
             )}
             {subtitle && (
-              <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">{subtitle}</p>
+              <p className="mt-2 text-sm max-w-2xl mx-auto" style={{ color: "var(--color-muted)" }}>{subtitle}</p>
             )}
             <div className="mt-4 flex justify-center">
-              <span className="inline-block h-1 w-16 rounded bg-sky-500/70"></span>
+              <span className="inline-block h-1 w-16 rounded bg-orange-500"></span>
             </div>
           </header>
         )}

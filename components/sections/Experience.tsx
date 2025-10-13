@@ -9,14 +9,14 @@ export function Experience() {
           <h3 className="font-display font-semibold">
             {e.role} · <span className="text-sky-700 dark:text-sky-300">{e.company}</span>
           </h3>
-          <p className="text-sm text-gray-500">{e.start} – {e.end ?? "Présent"}</p>
-          <ul className="mt-2 list-disc pl-5 text-gray-700 dark:text-gray-200">
+          <p className="text-sm" style={{ color: "var(--color-muted)" }}>{e.start} – {e.end ?? "Présent"}</p>
+          <ul className="mt-2 list-disc pl-5">
             {e.missions.map((m, i) => (
               <li key={i}>{m}</li>
             ))}
           </ul>
           {e.stack && (
-            <div className="mt-2 text-xs text-gray-500">Stack: {e.stack.join(", ")}</div>
+            <div className="mt-2 text-xs" style={{ color: "var(--color-muted)" }}>Stack: {e.stack.join(", ")}</div>
           )}
         </article>
       ))}

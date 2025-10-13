@@ -22,7 +22,7 @@ export function Projects() {
           )}
           <div className="p-4">
             <h3 className="font-display font-semibold text-lg">{p.title}</h3>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300">
+            <p className="mt-1 text-sm" style={{ color: "var(--color-muted)" }}>
               {p.description}
             </p>
            <ul className="mt-3 flex flex-wrap gap-2 text-xs text-sky-700 dark:text-sky-300">

@@ -13,7 +13,7 @@ export function Certifications() {
             </div>
           )}
           <h3 className="font-display font-semibold">{c.title}</h3>
-          <p className="text-sm text-gray-600 dark:text-gray-300">
+          <p className="text-sm" style={{ color: "var(--color-muted)" }}>
             {c.org} · {c.date}
           </p>
           {c.url && (
