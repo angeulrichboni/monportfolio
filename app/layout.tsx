@@ -6,10 +6,16 @@ import { SiteFooter } from "../components/SiteFooter";
 import { I18nProvider } from "../components/I18nProvider";
 
 export const metadata: Metadata = {
-  title: "Portfolio | BONI Acobe Ange Ulrich",
+  title: {
+    default: "Ulrich Boni | Portfolio",
+    template: "%s | Ulrich Boni",
+  },
   description:
     "Étudiant en dernière année de cycle ingénieur en Data Science & IA, spécialisé en Big Data et Data Engineering.",
   metadataBase: new URL("https://example.com"),
+  icons: {
+    icon: "/big_data_favicon.svg",
+  },
 };
 
 export default async function RootLayout({
