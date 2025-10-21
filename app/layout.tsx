@@ -5,6 +5,7 @@ import { SiteHeader } from "../components/SiteHeader";
 import { SiteFooter } from "../components/SiteFooter";
 import { I18nProvider } from "../components/I18nProvider";
 import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata: Metadata = {
   title: {
@@ -43,7 +44,8 @@ export default async function RootLayout({
           {children}
           <SiteFooter />
         </I18nProvider>
-        <Analytics/>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

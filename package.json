@@ -1,6 +1,6 @@
 {
   "name": "monportfolio",
-  "version": "0.1.0",
+  "version": "3.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
@@ -11,6 +11,7 @@
   "dependencies": {
     "@tailwindcss/postcss": "^4.1.14",
     "@vercel/analytics": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0",
     "framer-motion": "^11.3.2",
     "next": "15.5.4",
     "postcss": "^8.5.6",
