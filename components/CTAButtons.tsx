@@ -5,7 +5,7 @@ export function CTAButtons() {
   const { t, lang } = useI18n();
   const cvUrl =
     lang === "fr"
-      ? "https://drive.google.com/file/d/1ixAWV4ogPEmDne-Af-qwZAJGpcdR3eSi/view?usp=sharing"
+      ? "https://drive.google.com/file/d/1Voka2yOl5YNlI344RT5D3IZPEEtXFZWN/view?usp=sharing"
       : "https://drive.google.com/file/d/16tiHoI8p2J-m_d6MTv8N6WNBmyRxu5UE/view?usp=sharing";
   return (
     <div className="flex flex-wrap gap-3">
