@@ -20,7 +20,7 @@ export const projects: Project[] = [
     slug: "agent-x",
     title: { fr: "Agent‑X — Outil d’automatisation de pentesting", en: "Agent‑X — Automated pentesting assistant" },
     description: { fr: "Automatisation de tests de pénétration avec un agent intelligent.", en: "Automating penetration testing with an intelligent agent." },
-    stack: ["MongoDB", "ChromaDB", "Python", "LangGraph"],
+    stack: ["MongoDB", "ChromaDB", "Python", "LangGraph", "FastAPI", "Docker"],
     // github: "https://github.com/your-username/pipeline-elt-spark",
     content: {
       fr: "Conception d’Agent‑X, un agent workflow d’automatisation des tests de pénétration intégrant une gestion des connaissances basée sur des bases de données vectorielles. Les scans lancés par les utilisateurs sont indexés et enrichis (métadonnées, embeddings) dans une vector DB — ces données servent ensuite à alimenter un chatbot en mode RAG (Retrieval‑Augmented Generation). Grâce à ce flux, l’utilisateur peut interroger naturellement ses sessions de scan, retrouver rapidement les vulnérabilités, comprendre l’historique des actions et obtenir des explications contextuelles et des recommandations exploitables.",
@@ -83,7 +83,7 @@ export const projects: Project[] = [
     slug: "clickhealth",
     title: "ClickHealth",
     description: { fr: "Application de Gestion de Prise de Rendez-vous Médicaux.", en: "Medical appointment booking management app." },
-    stack: ["React Js", "PostgreSQL", "Tailwind CSS", "Django Rest Framework"],
+    stack: ["React Js", "PostgreSQL", "Tailwind CSS", "Django Rest Framework (DRF)"],
     content : {
       fr: "ClickHealth est une application web conçue pour faciliter la gestion des prises de rendez-vous médicaux. Elle permet aux utilisateurs de visualiser, d'analyser et de gérer les données de santé à partir d'une interface conviviale.\n\nLe projet utilise Next.js pour le rendu côté serveur et la génération de sites statiques, TypeScript pour la sécurité des types, et Tailwind CSS pour le design réactif. Prisma est utilisé comme ORM pour interagir avec la base de données PostgreSQL.\n\nLes principales fonctionnalités incluent :\n- Authentification des utilisateurs avec JWT\n- Gestion des profils de patients\n- Visualisation des données de santé sous forme de graphiques\n- Exportation des données au format CSV",
       en: "ClickHealth is a web app that simplifies managing medical appointments. It allows users to view, analyze and manage health data via a user-friendly interface.\n\nThe project uses Next.js for SSR/SSG, TypeScript for type safety, and Tailwind CSS for responsive design. Prisma is used as the ORM for PostgreSQL.\n\nMain features include:\n- User authentication with JWT\n- Patient profile management\n- Data visualization through charts\n- CSV export"
@@ -104,22 +104,42 @@ export const projects: Project[] = [
     ],
   },
   {
-    slug: "sql-datacamp-project",
-    title: { fr: "Examen pratique SQL sur DataCamp", en: "SQL Associate Practice Exam on DataCamp" },
-    description: { fr: "Examen pratique pour l'association SQL sur DataCamp.", en: "Practice exam for the SQL Associate track on DataCamp." },
-    stack: ["PostgreSQL"],
-    content : { fr: "Ce projet est un examen pratique pour l'association SQL sur DataCamp. Il vise à tester les compétences en SQL à travers une série de questions et d'exercices pratiques.", en: "This project is a practice exam for the SQL Associate path on DataCamp, designed to test SQL skills via questions and hands-on exercises." },
-    // github: "https://github.com/angeulrichboni/diabetes-data-pipeline",
-    thumbnail: "https://res.cloudinary.com/ddivqszbt/image/upload/v1744935006/sql_exam_datacamp_vrmaij.png",
-    media: [
-      {type: "image", src: "https://res.cloudinary.com/ddivqszbt/image/upload/v1744935006/sql_exam_datacamp_vrmaij.png", alt: { fr: "Examen SQL DataCamp", en: "SQL DataCamp exam" }},
+    slug: "erp-arsn-project",
+    title: {
+      fr: "ERP ARSN - Gestion Dossiers & Demandes",
+      en: "ERP ARSN - Case & Request Management"
+    },
+    description: {
+      fr: "Système ERP pour la gestion centralisée des dossiers administratifs, demandes d'absence, validations hiérarchiques et délégations inter-services.",
+      en: "ERP system for centralized management of administrative cases, absence requests, hierarchical validations and inter-service delegations."
+    },
+    stack: [
+      "ASP.NET Core 8","PostgreSQL","Entity Framework Core","MinIO","Next.js",
+      "Docker", "SQL Server"
     ],
+    content: {
+      fr: "Ce projet fournit une plateforme intégrée permettant aux services de créer, déléguer et valider des dossiers ainsi que de gérer des demandes d'absence avec historique, pièces jointes et rôles avancés (DG, Manager, Agent).",
+      en: "This project delivers an integrated platform allowing departments to create, delegate and validate cases, as well as manage absence requests with history, attachments and advanced roles (Director, Manager, Agent)."
+    },
+    thumbnail: "https://res.cloudinary.com/ddivqszbt/image/upload/v1763933607/home_u4h0po.png",
+    media: [
+      {
+        type: "video",
+        src: "https://res.cloudinary.com/ddivqszbt/video/upload/v1763932064/ERP_ARSN_V1_fqnqtl.mp4",
+        alt: { fr: "Interface ERP ARSN", en: "ERP ARSN interface" }
+      },
+      {
+        type: "image",
+        src: "https://res.cloudinary.com/ddivqszbt/image/upload/v1763933607/api_wvvhld.png",
+        alt: { fr: "Interface ERP ARSN", en: "ERP ARSN interface" }
+      }
+    ]
   },
   {
     slug: "car-express",
     title: "Car Express",
     description: { fr: "Application de gestion de location de voitures.", en: "Car rental management application." },
-    stack: ["Next.js", "TypeScript", "Prisma", "PostgreSQL"],
+    stack: ["Next.js", "TypeScript", "PostgreSQL", "Laravel"],
     content : { fr: "Ce projet est une application de gestion de location de voitures, permettant aux utilisateurs de réserver des véhicules en ligne. Il utilise Next.js pour le frontend et Prisma pour interagir avec la base de données PostgreSQL.", en: "This project is a car rental management application that lets users book vehicles online. It uses Next.js for the frontend and Prisma to interact with PostgreSQL." },
     github: "https://github.com/kiboyou/car_express/tree/newbackend/carexpress",
     thumbnail: "https://res.cloudinary.com/ddivqszbt/image/upload/v1744897040/home_yemone.png",
@@ -134,5 +154,17 @@ export const projects: Project[] = [
       { name: "OUATTARA Kiboyou Mohamed", github: "https://github.com/kiboyou" },
     ],
   },
+  {
+    slug: "sql-datacamp-project",
+    title: { fr: "Examen pratique SQL sur DataCamp", en: "SQL Associate Practice Exam on DataCamp" },
+    description: { fr: "Examen pratique pour l'association SQL sur DataCamp.", en: "Practice exam for the SQL Associate track on DataCamp." },
+    stack: ["PostgreSQL"],
+    content : { fr: "Ce projet est un examen pratique pour l'association SQL sur DataCamp. Il vise à tester les compétences en SQL à travers une série de questions et d'exercices pratiques.", en: "This project is a practice exam for the SQL Associate path on DataCamp, designed to test SQL skills via questions and hands-on exercises." },
+    // github: "https://github.com/angeulrichboni/diabetes-data-pipeline",
+    thumbnail: "https://res.cloudinary.com/ddivqszbt/image/upload/v1744935006/sql_exam_datacamp_vrmaij.png",
+    media: [
+      {type: "image", src: "https://res.cloudinary.com/ddivqszbt/image/upload/v1744935006/sql_exam_datacamp_vrmaij.png", alt: { fr: "Examen SQL DataCamp", en: "SQL DataCamp exam" }},
+    ],
+  }
 
 ];

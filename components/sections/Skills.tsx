@@ -3,14 +3,10 @@ import { skills, type Skill } from "../../data/skills";
 import { useI18n } from "../I18nProvider";
 
 const categories = [
-  "Langages",
-  "Big Data & Streaming",
-  "Cloud",
-  "Bases de données",
-  "Outils",
-  "Orchestration & MLOps",
-  "DevOps & Containers",
-  "Cloud & Data",
+  "Data Engineering",
+  "Backend / API",
+  "Linux / Admin système",
+  "DevOps / Cloud"
 ] as const;
 
 type Grouped = Record<Skill["category"], Skill[]>;
