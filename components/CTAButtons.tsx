@@ -9,17 +9,17 @@ export function CTAButtons() {
 
   return (
     <div className="flex flex-wrap gap-4">
-      <a 
-        href={cvUrl} 
-        className="px-8 py-3.5 rounded-full bg-blue-600 text-white font-bold shadow-lg shadow-blue-500/30 hover:bg-blue-700 hover:shadow-xl hover:-translate-y-1 transition-all" 
-        target="_blank" 
+      <a
+        href={cvUrl}
+        className="px-8 py-4 rounded-2xl bg-blue-600 text-white font-bold shadow-lg shadow-blue-500/25 hover:bg-blue-700 hover:shadow-blue-500/40 hover:-translate-y-1 transition-all duration-300"
+        target="_blank"
         rel="noopener noreferrer"
       >
         {t("cta.downloadCv")}
       </a>
       <a
         href="https://github.com/angeulrichboni"
-        className="px-8 py-3.5 rounded-full bg-white text-slate-700 font-bold border border-slate-200 hover:border-slate-900 hover:bg-slate-50 transition-all"
+        className="px-8 py-4 rounded-2xl bg-white text-slate-700 font-bold border border-slate-200 shadow-sm hover:border-slate-300 hover:bg-slate-50 hover:-translate-y-1 transition-all duration-300"
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -27,7 +27,7 @@ export function CTAButtons() {
       </a>
       <a
         href="https://www.linkedin.com/in/acobe-ange-ulrich-boni/"
-        className="px-8 py-3.5 rounded-full bg-white text-slate-700 font-bold border border-slate-200 hover:border-blue-600 hover:text-blue-600 hover:bg-blue-50 transition-all"
+        className="px-8 py-4 rounded-2xl bg-white text-slate-700 font-bold border border-slate-200 shadow-sm hover:border-blue-200 hover:text-blue-600 hover:bg-blue-50 hover:-translate-y-1 transition-all duration-300"
         target="_blank"
         rel="noopener noreferrer"
       >

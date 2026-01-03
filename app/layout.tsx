@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import "./globals.css";
-import { SiteHeader } from "../components/SiteHeader";
-import { SiteFooter } from "../components/SiteFooter";
+import { LayoutWrapper } from "../components/LayoutWrapper";
 import { I18nProvider } from "../components/I18nProvider";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -45,9 +44,9 @@ export default async function RootLayout({
     <html lang={lang} className={`${montserrat.variable} ${openSans.variable} scroll-smooth`}>
       <body className={`bg-background text-foreground antialiased`}>
         <I18nProvider initialLang={lang}>
-          <SiteHeader />
-          {children}
-          <SiteFooter />
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
         </I18nProvider>
         <Analytics />
         <SpeedInsights />

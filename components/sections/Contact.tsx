@@ -27,15 +27,15 @@ export function Contact() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       {/* Container Unifié : Une seule carte divisée en deux */}
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden grid md:grid-cols-2 border border-slate-100">
-        
+
         {/* Colonne Gauche : Informations (Fond Bleu pour contraste max) */}
         <div className="bg-blue-600 p-8 md:p-10 flex flex-col justify-between text-white relative overflow-hidden">
           {/* Cercle décoratif en arrière-plan */}
           <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-blue-500 rounded-full opacity-50 blur-2xl pointer-events-none"></div>
-          
+
           <div>
             <h3 className="text-2xl font-bold mb-2">{t("contact.infoTitle")}</h3>
             <p className="text-blue-100 text-sm mb-8 opacity-90">
@@ -54,7 +54,7 @@ export function Contact() {
                   </a>
                 </div>
               </li>
-              
+
               <li className="flex items-start gap-4">
                 <div className="bg-white/10 p-2.5 rounded-lg backdrop-blur-sm shrink-0">
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
@@ -80,8 +80,8 @@ export function Contact() {
           </div>
 
           <div className="mt-8 pt-8 border-t border-blue-500/50">
-             {/* Tu peux ajouter tes réseaux sociaux ici en icônes blanches si tu veux */}
-             <p className="text-xs text-blue-200">Disponible pour freelance & CDI</p>
+            {/* Tu peux ajouter tes réseaux sociaux ici en icônes blanches si tu veux */}
+            <p className="text-xs text-blue-200">Disponible pour freelance & CDI</p>
           </div>
         </div>
 
@@ -89,12 +89,12 @@ export function Contact() {
         <div className="p-8 md:p-10 bg-white">
           <form onSubmit={onSubmit} className="space-y-5">
             <input type="hidden" name="_ts" value={String(Date.now())} />
-            
+
             <div className="space-y-1.5">
               <label className="text-sm font-bold text-slate-700">{t("contact.name")}</label>
-              <input 
-                name="name" 
-                required 
+              <input
+                name="name"
+                required
                 className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all outline-none"
                 placeholder="Jean Dupont"
               />
@@ -102,10 +102,10 @@ export function Contact() {
 
             <div className="space-y-1.5">
               <label className="text-sm font-bold text-slate-700">{t("contact.email")}</label>
-              <input 
-                type="email" 
-                name="email" 
-                required 
+              <input
+                type="email"
+                name="email"
+                required
                 className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all outline-none"
                 placeholder="jean@exemple.com"
               />
@@ -113,17 +113,17 @@ export function Contact() {
 
             <div className="space-y-1.5">
               <label className="text-sm font-bold text-slate-700">{t("contact.message")}</label>
-              <textarea 
-                name="message" 
-                rows={4} 
-                required 
+              <textarea
+                name="message"
+                rows={4}
+                required
                 className="w-full px-4 py-2.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition-all outline-none resize-none"
                 placeholder="Bonjour, j'aimerais discuter d'un projet..."
               />
             </div>
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               disabled={status === "sending"}
               className="w-full py-3.5 px-6 mt-2 rounded-lg bg-slate-900 text-white font-bold hover:bg-blue-600 active:scale-[0.98] transition-all shadow-lg shadow-slate-200 disabled:opacity-70 disabled:cursor-not-allowed"
             >

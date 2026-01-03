@@ -12,11 +12,11 @@ export function HeroCopy() {
         </span>
         {t("hero.subtitle")}
       </div>
-      
+
       <div className="space-y-2">
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight leading-[1.1]">
-          BONI Acobe <br/>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
+        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold text-slate-900 tracking-tight leading-[1.05]">
+          BONI Acobe <br />
+          <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-sky-400">
             Ange Ulrich
           </span>
         </h1>

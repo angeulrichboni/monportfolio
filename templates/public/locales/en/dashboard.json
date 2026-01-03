@@ -1,0 +1,23 @@
+{
+  "title": "Dashboard Overview",
+  "welcome": "Welcome back, {{name}}. Here's what's happening today.",
+  "stats": {
+    "totalProjects": "Total Projects",
+    "educationEntries": "Education Entries",
+    "blogPosts": "Blog Posts",
+    "totalViews": "Total Views"
+  },
+  "activity": {
+    "title": "Recent Activity",
+    "viewLog": "View Log"
+  },
+  "quickActions": {
+    "title": "Quick Actions",
+    "subtitle": "Common management tasks",
+    "addProject": "Add Project",
+    "updateEducation": "Update Education",
+    "writeArticle": "Write Article",
+    "quickAdd": "Quick Add",
+    "downloadReport": "Download Report"
+  }
+}

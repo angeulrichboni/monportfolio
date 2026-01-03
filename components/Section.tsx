@@ -12,15 +12,15 @@ type Props = PropsWithChildren<{
   variant?: "white" | "gray"; // Nouvelle prop pour le fond
 }>;
 
-export function Section({ 
-  id, 
-  title, 
-  subtitle, 
-  className, 
-  titleKey, 
-  subtitleKey, 
+export function Section({
+  id,
+  title,
+  subtitle,
+  className,
+  titleKey,
+  subtitleKey,
   variant = "white",
-  children 
+  children
 }: Props) {
   const { t } = useI18n();
   const resolvedTitle = titleKey ? t(titleKey) : title;
@@ -39,9 +39,9 @@ export function Section({
               </h2>
             )}
             <div className="mt-4 flex justify-center">
-              <div className="h-1 w-20 rounded-full bg-blue-600"></div>
+              <div className="h-1.5 w-16 rounded-full bg-blue-600/80"></div>
             </div>
-            {resolvedSubtitle && (
+            {resolvedSubtitle && resolvedSubtitle.trim() !== "" && (
               <p className="mt-4 text-lg text-slate-600 leading-relaxed">
                 {resolvedSubtitle}
               </p>

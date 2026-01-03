@@ -9,10 +9,15 @@
   --background: #f8fafc; 
   --foreground: #0f172a;
   
-  /* Couleurs sémantiques */
-  --primary: #2563eb; /* Un bleu royal professionnel */
+  /* Couleurs sémantiques - Royal / Sky Blue Theme */
+  --primary: #2563eb; /* Royal Blue */
+  --primary-foreground: #ffffff;
+  --secondary: #0ea5e9; /* Sky Blue */
+  --secondary-foreground: #ffffff;
+  --accent: #eff6ff; /* Très léger bleu pour les fonds alternés */
   --muted: #64748b;
   --card-bg: #ffffff;
+  --border: #e2e8f0;
 }
 
 body {

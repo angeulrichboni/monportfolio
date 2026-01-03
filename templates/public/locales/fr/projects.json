@@ -1,0 +1,127 @@
+{
+  "public": {
+    "title": "Projets Techniques",
+    "subtitle": "Présentation de l'expertise en Data Science, Machine Learning et Big Data Engineering",
+    "filters": {
+      "all": "Tous",
+      "cv": "Vision par Ordinateur",
+      "bigdata": "Big Data",
+      "nlp": "NLP"
+    },
+    "view_details": "Voir Détails",
+    "status": {
+      "completed": "Terminé",
+      "ongoing": "En cours"
+    },
+    "details": {
+      "notFound": "Projet non trouvé",
+      "backToList": "Retour à la liste",
+      "backToProjects": "Retour aux projets",
+      "repository": "Dépôt",
+      "liveDemo": "Démo Live",
+      "overview": "Aperçu du projet",
+      "problemStatement": "Problématique",
+      "architecture": "Architecture de la solution",
+      "teamProject": "Projet d'équipe",
+      "technologies": "Technologies",
+      "projectInfo": "Infos du projet",
+      "type": "Type",
+      "team": "Équipe",
+      "individual": "Individuel",
+      "createdAt": "Créé le",
+      "status": "Statut"
+    },
+    "items": [
+      {
+        "id": "1",
+        "title": "Navigation de Drone Autonome",
+        "description": "Un système complet permettant aux drones de naviguer dans des environnements intérieurs complexes sans GPS. La solution intègre SLAM pour la cartographie et un CNN personnalisé pour la détection d'objets en temps réel.",
+        "problem_statement": "Les drones commerciaux ont souvent du mal dans les environnements sans GPS comme les entrepôts ou les tunnels, entraînant des collisions et des pertes d'actifs.",
+        "architecture": "Utilisation d'un flux de caméra monoculaire traité par un Jetson Nano. La pile comprend ROS2 pour le passage de messages, ORB-SLAM3 pour la localisation et un MobileNetV3 SSD pour la détection d'obstacles.",
+        "imageUrl": "https://picsum.photos/800/600",
+        "technologies": [{ "id": "t1", "name": "Python" }, { "id": "t2", "name": "OpenCV" }, { "id": "t3", "name": "TensorFlow" }, { "id": "t4", "name": "ROS2" }],
+        "status": "completed",
+        "is_team": false,
+        "category": "cv",
+        "github_url": "https://github.com/annabellemiller/drone-rl"
+      },
+      {
+        "id": "2",
+        "title": "Analyse de Sentiment à Grande Échelle",
+        "description": "Un pipeline de données de bout en bout traitant des flux massifs de données Twitter/X pour évaluer le sentiment public concernant les tendances des marchés financiers.",
+        "problem_statement": "L'analyse de millions de tweets en temps réel pour détecter le sentiment influençant le marché est coûteuse en calcul et nécessite une architecture à faible latence.",
+        "architecture": "Ingestion via Kafka, traitement en flux avec Apache Spark Structured Streaming et analyse utilisant un modèle BERT affiné. Résultats stockés dans Cassandra.",
+        "imageUrl": "https://picsum.photos/800/601",
+        "technologies": [{ "id": "t5", "name": "Spark" }, { "id": "t6", "name": "NLP" }, { "id": "t7", "name": "Kafka" }, { "id": "t8", "name": "Scala" }],
+        "status": "completed",
+        "is_team": true,
+        "category": "bigdata",
+        "members": [
+          { "id": "m1", "project_id": "2", "name": "John Doe", "role": "Data Engineer" },
+          { "id": "m2", "project_id": "2", "name": "Jane Smith", "role": "DevOps" }
+        ],
+        "github_url": "https://github.com/annabellemiller/spark-sentiment"
+      },
+      {
+        "id": "3",
+        "title": "Segmentation d'Images Médicales",
+        "description": "Développement d'une architecture basée sur U-Net pour aider les radiologues à identifier les tumeurs dans les scans IRM avec une haute précision.",
+        "problem_statement": "La segmentation manuelle des scans IRM prend du temps et est sujette à la variabilité inter-observateur.",
+        "architecture": "Architecture U-Net standard avec blocs résiduels. Entraîné sur le jeu de données BRATS en utilisant une forte augmentation de données pour gérer le déséquilibre de classe.",
+        "imageUrl": "https://picsum.photos/800/602",
+        "technologies": [{ "id": "t9", "name": "PyTorch" }, { "id": "t10", "name": "UNet" }, { "id": "t11", "name": "Docker" }],
+        "status": "ongoing",
+        "is_team": false,
+        "category": "cv"
+      }
+    ]
+  },
+  "title": "Projets",
+  "subtitle": "Gérez les éléments de votre portfolio.",
+  "newProject": "Nouveau Projet",
+  "results": "{{count}} résultats",
+  "table": {
+    "project": "Projet",
+    "status": "Statut",
+    "category": "Catégorie",
+    "date": "Date",
+    "actions": "Actions"
+  },
+  "type": {
+    "team": "Projet d'équipe",
+    "individual": "Individuel"
+  },
+  "modal": {
+    "createTitle": "Créer un nouveau projet",
+    "editTitle": "Modifier le projet : {{title}}",
+    "tabs": {
+      "essentials": "Essentiels",
+      "details": "Détails Techniques",
+      "media": "Média & Liens"
+    },
+    "labels": {
+      "title": "Titre du projet",
+      "category": "Catégorie",
+      "status": "Statut",
+      "description": "Courte description",
+      "isTeam": "C'est un projet d'équipe",
+      "problem": "Problématique",
+      "architecture": "Architecture de la solution",
+      "techStack": "Technologies utilisées",
+      "coverImage": "URL Image de couverture",
+      "github": "URL Repository GitHub",
+      "demo": "URL Démo Live"
+    },
+    "placeholders": {
+      "title": "ex: Essaim de drones autonomes",
+      "description": "Un bref résumé pour la carte...",
+      "techStack": "Python, TensorFlow, React... (séparés par virgule)"
+    }
+  },
+  "toast": {
+    "deleted": "Projet supprimé avec succès",
+    "updated": "Projet mis à jour avec succès",
+    "created": "Projet créé avec succès"
+  },
+  "deleteConfirm": "Êtes-vous sûr de vouloir supprimer ce projet ? Cette action est irréversible."
+}

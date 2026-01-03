@@ -1,0 +1,41 @@
+{
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "view": "View Details",
+    "viewAll": "View all",
+    "back": "Back",
+    "download": "Download",
+    "search": "Search",
+    "filter": "Filter",
+    "confirm": "Confirm",
+    "readMore": "Read more"
+  },
+  "status": {
+    "published": "Published",
+    "draft": "Draft",
+    "archived": "Archived",
+    "completed": "Completed",
+    "ongoing": "Ongoing"
+  },
+  "footer": {
+    "rights": "© {{year}} Ange Ulrich BONI • Made with",
+    "using": "using React, TypeScript & Tailwind",
+    "status": "System Status: Online"
+  },
+  "buttons": {
+    "view_details": "View Details",
+    "read_more": "Read more",
+    "download_cv": "Download CV",
+    "send_message": "Send Message",
+    "sending": "Sending...",
+    "send_another": "Send another message"
+  },
+  "languages": {
+    "fr": "French",
+    "en": "English"
+  }
+}
