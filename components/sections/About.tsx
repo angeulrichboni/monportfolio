@@ -4,50 +4,73 @@ import { useI18n } from "../I18nProvider";
 export function About() {
   const { t } = useI18n();
   return (
-    <div className="space-y-8">
-      {/* Intro centered */}
-      <div className="text-center space-y-3 max-w-3xl mx-auto">
-        <p>{t("about.intro1")}</p>
-        <p>{t("about.intro2")}</p>
+    <div className="grid lg:grid-cols-2 gap-12 items-center">
+      
+      {/* Colonne Texte */}
+      <div className="space-y-6">
+        <div className="prose prose-lg text-slate-600">
+          <p>{t("about.intro1")}</p>
+          <p>{t("about.intro2")}</p>
+        </div>
+
+        {/* Info rapide */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+          <InfoCard label={t("about.info.specialization")} value={t("about.info.specialization.value")} icon="💻" />
+          <InfoCard label={t("about.info.interests")} value={t("about.info.interests.value")} icon="🚀" />
+          <InfoCard label={t("about.info.location")} value={t("about.info.location.value")} icon="📍" />
+        </div>
       </div>
 
-      {/* Info row aligned */}
-      <ul className="grid gap-3 sm:grid-cols-3 text-sm max-w-4xl mx-auto">
-        <li className="card p-4 text-center">
-          <div className="text-xs uppercase tracking-wide" style={{ color: "var(--color-muted)" }}>{t("about.info.specialization")}</div>
-          <div className="mt-1 font-medium" style={{ color: "var(--color-foreground)" }}>{t("about.info.specialization.value")}</div>
-        </li>
-        <li className="card p-4 text-center">
-          <div className="text-xs uppercase tracking-wide" style={{ color: "var(--color-muted)" }}>{t("about.info.interests")}</div>
-          <div className="mt-1 font-medium" style={{ color: "var(--color-foreground)" }}>{t("about.info.interests.value")}</div>
-        </li>
-        <li className="card p-4 text-center">
-          <div className="text-xs uppercase tracking-wide" style={{ color: "var(--color-muted)" }}>{t("about.info.location")}</div>
-          <div className="mt-1 font-medium" style={{ color: "var(--color-foreground)" }}>{t("about.info.location.value")}</div>
-        </li>
-      </ul>
-
-      {/* Academic parcours as horizontal cards */}
-      <div className="card p-6">
-        <h3 className="font-display text-xl font-bold text-gray-900 dark:text-gray-50 text-center">{t("about.academic.title")}</h3>
-        <div className="mt-4 grid gap-4 md:grid-cols-3">
-          <div className="rounded-lg border border-gray-200 dark:border-gray-800 p-4">
-            <div className="font-semibold">{t("about.academic.item1.title")}</div>
-            <div className="text-sm" style={{ color: "var(--color-muted)" }}>{t("about.academic.item1.school")}</div>
-            <p className="text-sm mt-1">{t("about.academic.item1.desc")}</p>
-          </div>
-          <div className="rounded-lg border border-gray-200 dark:border-gray-800 p-4">
-            <div className="font-semibold">{t("about.academic.item2.title")}</div>
-            <div className="text-sm" style={{ color: "var(--color-muted)" }}>{t("about.academic.item2.school")}</div>
-            <p className="text-sm mt-1">{t("about.academic.item2.desc")}</p>
-          </div>
-          <div className="rounded-lg border border-gray-200 dark:border-gray-800 p-4">
-            <div className="font-semibold">{t("about.academic.item3.title")}</div>
-            <div className="text-sm" style={{ color: "var(--color-muted)" }}>{t("about.academic.item3.school")}</div>
-            <p className="text-sm mt-1">{t("about.academic.item3.desc")}</p>
-          </div>
+      {/* Colonne Parcours Académique */}
+      <div className="bg-white p-6 sm:p-8 rounded-2xl border border-slate-100 shadow-xl shadow-slate-200/50">
+        <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
+          <span className="text-2xl">🎓</span> {t("about.academic.title")}
+        </h3>
+        
+        <div className="space-y-6 relative before:absolute before:inset-0 before:ml-2.5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-slate-200 before:to-transparent">
+            {/* Item 1 */}
+            <AcademicItem 
+              title={t("about.academic.item1.title")} 
+              school={t("about.academic.item1.school")}
+              desc={t("about.academic.item1.desc")}
+            />
+            {/* Item 2 */}
+            <AcademicItem 
+              title={t("about.academic.item2.title")} 
+              school={t("about.academic.item2.school")}
+              desc={t("about.academic.item2.desc")}
+            />
+            {/* Item 3 */}
+            <AcademicItem 
+              title={t("about.academic.item3.title")} 
+              school={t("about.academic.item3.school")}
+              desc={t("about.academic.item3.desc")}
+            />
         </div>
       </div>
     </div>
   );
+}
+
+function InfoCard({ label, value, icon }: { label: string, value: string, icon: string }) {
+  return (
+    <div className="bg-slate-50 p-4 rounded-xl border border-slate-100 hover:border-blue-200 transition-colors">
+      <div className="text-2xl mb-2">{icon}</div>
+      <div className="text-xs uppercase font-bold text-slate-400 tracking-wider mb-1">{label}</div>
+      <div className="font-semibold text-slate-900 text-sm">{value}</div>
+    </div>
+  );
+}
+
+function AcademicItem({ title, school, desc }: { title: string, school: string, desc: string }) {
+  return (
+    <div className="relative pl-8">
+      <span className="absolute left-0 top-1.5 h-5 w-5 rounded-full border-4 border-white bg-blue-500 shadow-sm ring-1 ring-slate-900/5"></span>
+      <div>
+        <h4 className="font-bold text-slate-900 text-sm sm:text-base">{title}</h4>
+        <div className="text-xs font-medium text-blue-600 mb-1">{school}</div>
+        <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">{desc}</p>
+      </div>
+    </div>
+  )
 }

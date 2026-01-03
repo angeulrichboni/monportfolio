@@ -12,79 +12,80 @@ import { HeroCopy } from "../components/HeroCopy";
 
 export default function Home() {
   return (
-    <main className="pt-16">
-      {/* Hero */}
-      <header id="accueil" className="relative overflow-hidden bg-sky-50 dark:bg-sky-950/20">
-        {/* Background image and overlay */}
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 bg-center bg-cover blur-sm"
-          style={{ backgroundImage: "url('/hero-bg.jfif')" }}
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 -z-10 bg-gradient-to-r from-white/85 to-white/20 dark:from-[#0b1220]/75 dark:to-[#0b1220]/20"
-        />
-        <div className="container mx-auto px-6 py-16 sm:py-20 md:py-24 grid gap-8 items-center md:grid-cols-2">
-          <Reveal>
-            <div className="order-2 md:order-1">
-              <HeroCopy />
-              <div className="mt-8">
-                <CTAButtons />
-              </div>
+    <main className="pt-20">
+      
+      {/* HERO SECTION */}
+      <header id="accueil" className="relative overflow-hidden bg-white">
+        {/* Subtle Gradient Background */}
+        <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/40 via-slate-50 to-white" />
+        
+        <div className="container mx-auto px-6 py-16 lg:py-28 grid gap-12 lg:gap-8 items-center lg:grid-cols-2">
+          
+          {/* Text Content */}
+          <Reveal className="order-2 lg:order-1">
+            <HeroCopy />
+            <div className="mt-10">
+              <CTAButtons />
             </div>
           </Reveal>
-          <Reveal>
-            <div className="relative order-1 md:order-2">
+
+          {/* Image Content */}
+          <Reveal className="order-1 lg:order-2 flex justify-center lg:justify-end">
+            <div className="relative w-full max-w-md aspect-[4/5] lg:aspect-square">
+              {/* Decorative elements */}
+              <div className="absolute top-4 right-4 -bottom-4 -left-4 bg-slate-100 rounded-3xl -z-10" />
+              <div className="absolute -top-4 -right-4 bottom-4 left-4 border-2 border-blue-100 rounded-3xl -z-10" />
+              
               <Image
                 src="https://res.cloudinary.com/ddivqszbt/image/upload/v1746353953/Me_d48ibg.jpg"
                 alt="Photo de BONI Acobe Ange Ulrich"
-                width={1200}
-                height={800}
+                fill
                 priority
-                className="w-full h-64 sm:h-72 md:h-80 lg:h-96 object-cover rounded-2xl shadow-xl ring-1 ring-black/5"
+                className="object-cover rounded-2xl shadow-2xl ring-1 ring-slate-900/5"
               />
             </div>
           </Reveal>
         </div>
       </header>
 
-      {/* Sections */}
+      {/* SECTIONS */}
+      
       <Reveal>
-        <Section id="a-propos" titleKey="section.about.title" subtitleKey="section.about.subtitle" className="scroll-mt-20">
+        <Section id="a-propos" titleKey="section.about.title" subtitleKey="section.about.subtitle" variant="white">
           <About />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="competences" titleKey="section.skills.title" subtitleKey="section.skills.subtitle" className="scroll-mt-20">
+        <Section id="competences" titleKey="section.skills.title" subtitleKey="section.skills.subtitle" variant="gray">
           <Skills />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="projets" titleKey="section.projects.title" subtitleKey="section.projects.subtitle" className="scroll-mt-20">
+        <Section id="projets" titleKey="section.projects.title" subtitleKey="section.projects.subtitle" variant="white">
           <Projects />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="experiences" titleKey="section.experience.title" subtitleKey="section.experience.subtitle" className="scroll-mt-20">
+        <Section id="experiences" titleKey="section.experience.title" subtitleKey="section.experience.subtitle" variant="gray">
           <Experience />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="certifications" titleKey="section.certifications.title" subtitleKey="section.certifications.subtitle" className="scroll-mt-20">
+        <Section id="certifications" titleKey="section.certifications.title" subtitleKey="section.certifications.subtitle" variant="white">
           <Certifications />
         </Section>
       </Reveal>
 
       <Reveal>
-        <Section id="contact" titleKey="section.contact.title" subtitleKey="section.contact.subtitle" className="scroll-mt-20">
+        <Section id="contact" titleKey="section.contact.title" subtitleKey="section.contact.subtitle" variant="gray" className="pb-32">
           <Contact />
         </Section>
       </Reveal>
+
     </main>
   );
 }

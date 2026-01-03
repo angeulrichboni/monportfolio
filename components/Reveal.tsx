@@ -23,7 +23,7 @@ export function Reveal({ as: Tag = "div", delay = 0, className, children }: Prop
           }
         });
       },
-      { threshold: 0.2 }
+      { threshold: 0.15 } // Légèrement ajusté pour déclencher un peu plus tôt
     );
     io.observe(el);
     return () => io.disconnect();
