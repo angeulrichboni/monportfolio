@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import "./globals.css";
 import { LayoutWrapper } from "../components/LayoutWrapper";
 import { I18nProvider } from "../components/I18nProvider";
+import LoadingProvider from "../components/LoadingProvider";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Montserrat, Open_Sans } from "next/font/google";
@@ -44,9 +45,11 @@ export default async function RootLayout({
     <html lang={lang} className={`${montserrat.variable} ${openSans.variable} scroll-smooth`}>
       <body className={`bg-background text-foreground antialiased`}>
         <I18nProvider initialLang={lang}>
-          <LayoutWrapper>
-            {children}
-          </LayoutWrapper>
+          <LoadingProvider>
+            <LayoutWrapper>
+              {children}
+            </LayoutWrapper>
+          </LoadingProvider>
         </I18nProvider>
         <Analytics />
         <SpeedInsights />
