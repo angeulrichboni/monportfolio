@@ -1,0 +1,34 @@
+{
+  "title": "Get in Touch",
+  "subtitle": "Open to opportunities in Data Science, Machine Learning Engineering, and Big Data projects",
+  "info": {
+    "email": "Email",
+    "location": "Location",
+    "locationValue": "San Francisco Bay Area / Remote"
+  },
+  "form": {
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "placeholders": {
+      "name": "John Doe",
+      "email": "john@example.com",
+      "subject": "Project Inquiry",
+      "message": "Hi Ange, I'd love to discuss..."
+    },
+    "submit": "Send Message",
+    "sending": "Sending..."
+  },
+  "success": {
+    "title": "Message Sent!",
+    "message": "Thank you for reaching out. I'll get back to you shortly.",
+    "button": "Send another message"
+  },
+  "validation": {
+    "name": "Name is required",
+    "email": "Invalid email address",
+    "subject": "Subject is too short",
+    "message": "Message must be at least 20 characters"
+  }
+}

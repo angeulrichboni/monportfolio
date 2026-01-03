@@ -1,0 +1,28 @@
+{
+  "title": "Éducation & Formation",
+  "subtitle": "Parcours académique, diplômes et certifications.",
+  "export": "Exporter les relevés",
+  "items": [
+    {
+      "id": "1",
+      "institution": "Université de Technologie",
+      "degree": "Master en Science des Données & Intelligence Artificielle",
+      "period": "2023 - 2024",
+      "description": "Spécialisation en Deep Learning et Systèmes de Données à Grande Échelle. Diplômé avec mention. Cours clés : Deep Learning Avancé, Systèmes Distribués, Vision par Ordinateur."
+    },
+    {
+      "id": "2",
+      "institution": "École Nationale d'Ingénieurs",
+      "degree": "Licence en Informatique",
+      "period": "2020 - 2023",
+      "description": "Solides bases en algorithmique, mathématiques et génie logiciel. Majeure en Architecture Logicielle et Gestion de Bases de Données."
+    },
+    {
+      "id": "3",
+      "institution": "DeepLearning.AI",
+      "degree": "Spécialisation Deep Learning",
+      "period": "2022 - 2022",
+      "description": "Cursus complet couvrant les Réseaux de Neurones, CNN, RNN, LSTM et Transformers."
+    }
+  ]
+}

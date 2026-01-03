@@ -31,13 +31,12 @@ export function MediaGallery({ media, title }: { media: MediaItem[]; title: Loca
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // Lock scroll when modal is open (prevents background shifting/"dancing")
+  // Lock scroll when modal is open
   useEffect(() => {
     if (openIndex !== null) {
       const y = window.scrollY;
       scrollYRef.current = y;
       const { body } = document;
-      // Lock the body in place
       if (body.style.position !== "fixed") {
         body.style.position = "fixed";
         body.style.top = `-${y}px`;
@@ -46,7 +45,6 @@ export function MediaGallery({ media, title }: { media: MediaItem[]; title: Loca
         body.style.width = "100%";
       }
       return () => {
-        // Restore scroll
         body.style.position = "";
         body.style.top = "";
         body.style.left = "";
@@ -60,26 +58,28 @@ export function MediaGallery({ media, title }: { media: MediaItem[]; title: Loca
 
   return (
     <>
-      <div className="mt-3 grid gap-3 sm:grid-cols-2">
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
         {media.map((m, i) => (
           m.type === "image" ? (
             <button
               key={i}
               type="button"
               onClick={() => setOpenIndex(i)}
-              className="relative group overflow-hidden rounded cursor-zoom-in focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="relative group overflow-hidden rounded-xl border border-slate-200 cursor-zoom-in focus:outline-none focus:ring-4 focus:ring-blue-100"
               aria-label={(pick(m.alt) || pick(title)) + ` — image ${i + 1}`}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={m.src}
-                alt={pick(m.alt) || pick(title)}
-                className="w-full h-56 object-cover transition-transform duration-300 group-hover:scale-105"
-              />
+              <div className="aspect-video bg-slate-100">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={m.src}
+                  alt={pick(m.alt) || pick(title)}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
             </button>
           ) : (
-            <div key={i} className="rounded overflow-hidden">
-              <video controls className="w-full rounded">
+            <div key={i} className="rounded-xl overflow-hidden border border-slate-200 bg-black">
+              <video controls className="w-full h-full">
                 <source src={m.src} />
               </video>
             </div>
@@ -91,35 +91,37 @@ export function MediaGallery({ media, title }: { media: MediaItem[]; title: Loca
       {openIndex !== null && media[openIndex]?.type === "image" &&
         createPortal(
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center"
+            className="fixed inset-0 z-[60] flex items-center justify-center p-4 sm:p-6"
             role="dialog"
             aria-modal="true"
             aria-label={pick(media[openIndex].alt) || pick(title)}
           >
-            {/* Backdrop */}
+            {/* Backdrop with Blur */}
             <button
               type="button"
               aria-label="Fermer"
-              className="absolute inset-0 bg-black/70 overscroll-contain touch-none"
+              className="absolute inset-0 bg-slate-900/90 backdrop-blur-sm transition-opacity"
               onClick={() => setOpenIndex(null)}
             />
-            {/* Content wrapper to stop closing when clicking the image */}
-            <div className="relative z-10 p-2 sm:p-3" onClick={(e) => e.stopPropagation()}>
+            
+            {/* Content wrapper */}
+            <div className="relative z-10 w-full max-w-5xl max-h-full flex items-center justify-center outline-none" onClick={(e) => e.stopPropagation()}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={media[openIndex].src}
                 alt={pick(media[openIndex].alt) || pick(title)}
-                className="max-w-[90vw] max-h-[85vh] object-contain rounded shadow-2xl block"
+                className="max-w-full max-h-[90vh] object-contain rounded shadow-2xl"
               />
             </div>
-            {/* Close button at viewport top-right */}
+            
+            {/* Close button */}
             <button
               type="button"
               aria-label="Fermer"
               onClick={() => setOpenIndex(null)}
-              className="absolute top-4 right-4 rounded-full bg-white text-gray-700 shadow p-2 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-sky-500"
+              className="absolute top-4 right-4 z-20 rounded-full bg-white/10 text-white p-2 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/50 backdrop-blur-md transition-colors"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="h-6 w-6">
                 <path fillRule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 11-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clipRule="evenodd" />
               </svg>
             </button>

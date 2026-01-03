@@ -9,28 +9,43 @@ type Props = PropsWithChildren<{
   className?: string;
   titleKey?: string;
   subtitleKey?: string;
+  variant?: "white" | "gray"; // Nouvelle prop pour le fond
 }>;
 
-export function Section({ id, title, subtitle, className, titleKey, subtitleKey, children }: Props) {
+export function Section({
+  id,
+  title,
+  subtitle,
+  className,
+  titleKey,
+  subtitleKey,
+  variant = "white",
+  children
+}: Props) {
   const { t } = useI18n();
   const resolvedTitle = titleKey ? t(titleKey) : title;
   const resolvedSubtitle = subtitleKey ? t(subtitleKey) : subtitle;
+
+  const bgClass = variant === "gray" ? "bg-slate-50 border-y border-slate-100" : "bg-transparent";
+
   return (
-    <section id={id} className={`section ${className ?? ""}`}>
-      <div className="container px-6">
+    <section id={id} className={`py-20 sm:py-24 ${bgClass} ${className ?? ""}`}>
+      <div className="container mx-auto px-6">
         {(resolvedTitle || resolvedSubtitle) && (
-          <header className="section-header mb-8 text-center">
+          <header className="mb-12 md:mb-16 text-center max-w-3xl mx-auto">
             {resolvedTitle && (
-              <h2 className="text-2xl sm:text-3xl font-display font-bold text-sky-700 dark:text-sky-300">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
                 {resolvedTitle}
               </h2>
             )}
-            {resolvedSubtitle && (
-              <p className="mt-2 text-sm max-w-2xl mx-auto" style={{ color: "var(--color-muted)" }}>{resolvedSubtitle}</p>
-            )}
             <div className="mt-4 flex justify-center">
-              <span className="inline-block h-1 w-16 rounded bg-orange-500"></span>
+              <div className="h-1.5 w-16 rounded-full bg-blue-600/80"></div>
             </div>
+            {resolvedSubtitle && resolvedSubtitle.trim() !== "" && (
+              <p className="mt-4 text-lg text-slate-600 leading-relaxed">
+                {resolvedSubtitle}
+              </p>
+            )}
           </header>
         )}
         {children}

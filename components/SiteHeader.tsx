@@ -1,151 +1,138 @@
 "use client";
-
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useI18n } from "./I18nProvider";
+import { Menu, X, Github, Linkedin, Globe, Terminal } from 'lucide-react';
 
 export function SiteHeader() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
+    const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close mobile menu when switching to md+ viewport
-  useEffect(() => {
-    const mql = window.matchMedia("(min-width: 768px)");
-    const handler = (e: MediaQueryListEvent) => {
-      if (e.matches) setMenuOpen(false);
-    };
-    if (mql.addEventListener) {
-      mql.addEventListener("change", handler);
-    } else {
-      mql.addListener(handler);
-    }
-    return () => {
-      if (mql.removeEventListener) {
-        mql.removeEventListener("change", handler);
-      } else {
-        mql.removeListener(handler);
-      }
-    };
-  }, []);
-
   const { lang, setLang, t } = useI18n();
+
+  const toggleLanguage = () => {
+    setLang(lang === 'fr' ? 'en' : 'fr');
+  };
+
+  const navLinks = [
+    { href: "/#a-propos", label: t("header.about") }, // Absolute paths for subpage compatibility
+    { href: "/#competences", label: t("header.skills") },
+    { href: "/#projets", label: t("header.projects") },
+    { href: "/#experiences", label: t("header.experience") },
+    { href: "/#certifications", label: t("header.certifications") },
+    { href: "/#contact", label: t("header.contact") },
+  ];
 
   return (
     <header
-      className={
-        "fixed top-0 left-0 right-0 z-40 border-b h-16 " +
-        (scrolled
-          ? "border-gray-200 dark:border-gray-800"
-          : "border-transparent")
-      }
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 w-full ${scrolled
+        ? "border-b border-white/10 bg-black/95 backdrop-blur-lg shadow-lg h-16"
+        : "border-b border-white/5 bg-black/40 backdrop-blur-md h-24"
+        }`}
     >
-      {/* Background image layer */}
-      <div
-        aria-hidden
-        className={
-          "absolute inset-0 -z-10 bg-center bg-cover transition-opacity duration-500 " +
-          (scrolled ? "opacity-70" : "opacity-100")
-        }
-        style={{ backgroundImage: "url('/header-bg.jpg')" }}
-      />
-      {/* Color and blur overlay to ensure readability */}
-      <div
-        aria-hidden
-        className={
-          "absolute inset-0 -z-10 transition-colors duration-500 " +
-          (scrolled
-            ? "bg-white/70 dark:bg-[#0b1220]/70 backdrop-blur"
-            : "bg-sky-50/80 dark:bg-sky-950/30")
-        }
-      />
+      <div className="mx-auto h-full max-w-7xl px-6 lg:px-8 flex items-center justify-between">
+        {/* Logo - Template Style */}
+        <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="flex items-center justify-center h-10 w-10 rounded-lg bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-md group-hover:shadow-lg transition-shadow">
+            <Terminal className="h-5 w-5" />
+          </div>
+          <span className="font-mono text-xl font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors">
+            aaub.ai
+          </span>
+        </Link>
 
-      <div className="relative container h-full flex items-center justify-between px-6">
-        <Link href="#accueil" className="font-display font-bold text-sky-700">B.A.A.U</Link>
-        <nav className="hidden md:flex gap-5 text-sm text-gray-700 dark:text-gray-300">
-          <Link href="#a-propos" className="hover:text-sky-600">{t("header.about")}</Link>
-          <Link href="#competences" className="hover:text-sky-600">{t("header.skills")}</Link>
-          <Link href="#projets" className="hover:text-sky-600">{t("header.projects")}</Link>
-          <Link href="#experiences" className="hover:text-sky-600">{t("header.experience")}</Link>
-          <Link href="#certifications" className="hover:text-sky-600">{t("header.certifications")}</Link>
-          <Link href="#contact" className="hover:text-sky-600">{t("header.contact")}</Link>
+        {/* Desktop Nav */}
+        <nav className="hidden lg:flex items-center gap-1">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="px-4 py-2 text-sm font-medium text-gray-200 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-200"
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          <div className="flex items-center space-x-2 ml-6 pl-6 border-l border-white/20">
+            <button
+              onClick={toggleLanguage}
+              className="p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-1 font-medium text-sm"
+              aria-label="Switch Language"
+            >
+              <Globe className="h-5 w-5" />
+              <span>{lang === 'fr' ? 'EN' : 'FR'}</span>
+            </button>
+
+            <a
+              href="https://github.com/angeulrichboni"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all"
+              aria-label="GitHub"
+            >
+              <Github className="h-5 w-5" />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/ange-ulrich-boni-057027170/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all"
+              aria-label="LinkedIn"
+            >
+              <Linkedin className="h-5 w-5" />
+            </a>
+          </div>
         </nav>
-        {/* Language selector */}
-        <div className="ml-4">
-          <select
-            value={lang}
-            onChange={e => setLang(e.target.value as "fr" | "en")}
-            className="border rounded px-2 py-1 text-sm bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200"
-            aria-label="Choisir la langue"
-          >
-            <option value="fr">{t("lang.fr")}</option>
-            <option value="en">{t("lang.en")}</option>
-          </select>
-        </div>
 
-        {/* Mobile hamburger */}
-        <button
-          type="button"
-          aria-controls="mobile-menu"
-          aria-expanded={menuOpen}
-          aria-label="Ouvrir le menu"
-          onClick={() => setMenuOpen((v) => !v)}
-          className="md:hidden inline-flex items-center justify-center rounded-md p-2 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-sky-500"
-        >
-          <span className="sr-only">Menu</span>
-          <svg
-            className={`h-6 w-6 transition-transform ${menuOpen ? "rotate-90" : "rotate-0"}`}
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth="2"
+        {/* Mobile Toggle */}
+        <div className="flex items-center gap-4 lg:hidden">
+          <button
+            onClick={toggleLanguage}
+            className="p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-all flex items-center gap-1 font-medium text-sm"
           >
-            {menuOpen ? (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            ) : (
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-            )}
-          </svg>
-        </button>
+            <Globe className="h-5 w-5" />
+            <span>{lang === 'fr' ? 'EN' : 'FR'}</span>
+          </button>
+          <button
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="p-2 text-white hover:bg-white/10 rounded-lg transition"
+            aria-label="Menu"
+          >
+            {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile menu overlay and panel */}
-      {/* Backdrop overlay to close menu on click */}
-      <button
-        type="button"
-        aria-hidden
-        onClick={() => setMenuOpen(false)}
-        className={
-          "md:hidden fixed inset-0 z-40 bg-black/30 transition-opacity " +
-          (menuOpen ? "opacity-100" : "opacity-0 pointer-events-none")
-        }
-      />
-
-      <div
-        id="mobile-menu"
-        className={
-          "md:hidden fixed top-16 left-0 right-0 z-50 origin-top transition-all duration-200 " +
-          (menuOpen ? "opacity-100 scale-y-100" : "opacity-0 scale-y-95 pointer-events-none")
-        }
-      >
-        <div className="mx-3 rounded-xl border border-gray-200 dark:border-gray-800 bg-white/90 dark:bg-[#0b1220]/90 backdrop-blur shadow-lg p-4">
-          <div className="flex flex-col gap-3 text-gray-800 dark:text-gray-200 text-sm">
-            <Link href="#a-propos" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.about")}</Link>
-            <Link href="#competences" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.skills")}</Link>
-            <Link href="#projets" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.projects")}</Link>
-            <Link href="#experiences" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.experience")}</Link>
-            <Link href="#certifications" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.certifications")}</Link>
-            <Link href="#contact" onClick={() => setMenuOpen(false)} className="hover:text-sky-600">{t("header.contact")}</Link>
+      {/* Mobile Menu */}
+      {menuOpen && (
+        <div className="lg:hidden absolute top-full left-0 right-0 bg-black/95 backdrop-blur-xl border-b border-white/10 shadow-xl p-4 flex flex-col gap-2 animate-in slide-in-from-top-4 duration-200">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              className="block p-3 rounded-xl text-gray-200 hover:bg-white/10 hover:text-white font-medium transition-colors"
+            >
+              {link.label}
+            </Link>
+          ))}
+          <div className="flex items-center justify-center gap-4 pt-4 mt-4 border-t border-white/20">
+            <a href="https://github.com/angeulrichboni" target="_blank" className="p-2 text-gray-300 hover:text-white">
+              <Github className="h-6 w-6" />
+            </a>
+            <a href="https://www.linkedin.com/in/ange-ulrich-boni-057027170/" target="_blank" className="p-2 text-gray-300 hover:text-white">
+              <Linkedin className="h-6 w-6" />
+            </a>
           </div>
         </div>
-      </div>
+      )}
     </header>
   );
 }

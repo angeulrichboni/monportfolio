@@ -1,11 +1,23 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import "./globals.css";
-import { SiteHeader } from "../components/SiteHeader";
-import { SiteFooter } from "../components/SiteFooter";
+import { LayoutWrapper } from "../components/LayoutWrapper";
 import { I18nProvider } from "../components/I18nProvider";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Montserrat, Open_Sans } from "next/font/google";
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-montserrat",
+});
+
+const openSans = Open_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-open-sans",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -29,20 +41,12 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const lang = (cookieStore.get("lang")?.value as "fr" | "en") ?? "fr";
   return (
-    <html lang={lang} className="scroll-smooth">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Open+Sans:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang={lang} className={`${montserrat.variable} ${openSans.variable} scroll-smooth`}>
       <body className={`bg-background text-foreground antialiased`}>
         <I18nProvider initialLang={lang}>
-          <SiteHeader />
-          {children}
-          <SiteFooter />
+          <LayoutWrapper>
+            {children}
+          </LayoutWrapper>
         </I18nProvider>
         <Analytics />
         <SpeedInsights />

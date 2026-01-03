@@ -1,0 +1,34 @@
+{
+  "title": "Me Contacter",
+  "subtitle": "Ouverte aux opportunités en Data Science, Machine Learning Engineering et projets Big Data",
+  "info": {
+    "email": "Email",
+    "location": "Localisation",
+    "locationValue": "San Francisco Bay Area / Télétravail"
+  },
+  "form": {
+    "name": "Nom",
+    "email": "Email",
+    "subject": "Sujet",
+    "message": "Message",
+    "placeholders": {
+      "name": "Jean Dupont",
+      "email": "jean@exemple.com",
+      "subject": "Demande de projet",
+      "message": "Bonjour Ange, j'aimerais discuter..."
+    },
+    "submit": "Envoyer le message",
+    "sending": "Envoi..."
+  },
+  "success": {
+    "title": "Message Envoyé !",
+    "message": "Merci de m'avoir contactée. Je vous répondrai sous peu.",
+    "button": "Envoyer un autre message"
+  },
+  "validation": {
+    "name": "Le nom est requis",
+    "email": "Adresse email invalide",
+    "subject": "Le sujet est trop court",
+    "message": "Le message doit contenir au moins 20 caractères"
+  }
+}

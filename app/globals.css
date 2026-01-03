@@ -1,114 +1,55 @@
 @import "tailwindcss";
 
-/* Theme tokens using CSS variables */
-:root {
-	/* Colors */
-	--color-background: #f7f9fc; /* blanc/gris très clair */
-	--color-foreground: #111827; /* gris foncé */
-	--color-muted: #6b7280; /* text secondary */
-	--color-card: #ffffff;
-	--color-border: #e5e7eb;
-
-	--color-sky-50: #f0f9ff;
-	--color-sky-100: #e0f2fe;
-	--color-sky-600: #0284c7; /* bleu principal */
-	--color-orange-500: #f97316; /* accents CTA */
-
-	/* Typography */
-		--font-sans-fallback: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans,
-		Ubuntu, Cantarell, "Helvetica Neue", Arial, "Apple Color Emoji",
-		"Segoe UI Emoji";
-		/* These variables will be set by the Google Fonts loaded in <head> */
-		--font-display: "Montserrat", var(--font-sans-fallback);
-		--font-sans: "Open Sans", var(--font-sans-fallback);
-
-	/* Container */
-	--container: 1200px;
-	color-scheme: light dark;
-}
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
 
 :root {
-	color-scheme: light dark;
-}
-
-html, body {
-	height: 100%;
+  /* Fond très légèrement teinté pour éviter le blanc pur agressif */
+  --background: #f8fafc; 
+  --foreground: #0f172a;
+  
+  /* Couleurs sémantiques - Royal / Sky Blue Theme */
+  --primary: #2563eb; /* Royal Blue */
+  --primary-foreground: #ffffff;
+  --secondary: #0ea5e9; /* Sky Blue */
+  --secondary-foreground: #ffffff;
+  --accent: #eff6ff; /* Très léger bleu pour les fonds alternés */
+  --muted: #64748b;
+  --card-bg: #ffffff;
+  --border: #e2e8f0;
 }
 
 body {
-	font-family: var(--font-sans);
-	background: var(--color-background);
-	color: var(--color-foreground);
+  background-color: var(--background);
+  color: var(--foreground);
+  /* Lissage des polices pour un rendu plus net */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-.container {
-	max-width: var(--container);
-	margin-inline: auto;
+/* Utilitaires personnalisés pour les cartes */
+.card-clean {
+  background-color: var(--card-bg);
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem; /* 16px */
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  transition: all 0.3s ease;
 }
 
-/* Utilities and components */
-.section {
-	padding-block: 4rem;
+.card-clean:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  border-color: #bfdbfe; /* Bordure bleu clair au survol */
 }
 
-.section-header h2 {
-	font-family: var(--font-display);
+/* Animation douce */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
 }
-
-.card {
-	background: var(--color-card);
-	border: 1px solid var(--color-border);
-	border-radius: 0.75rem;
-	padding: 1.25rem;
-	box-shadow: 0 1px 2px rgba(0,0,0,0.04);
-	transition: transform .2s ease, box-shadow .2s ease;
+.reveal.in {
+  opacity: 1;
+  transform: translateY(0);
 }
-
-.card:hover { transform: translateY(-2px); }
-
-.btn {
-	display: inline-flex;
-	align-items: center;
-	gap: 0.5rem;
-	padding: 0.625rem 1rem;
-	border-radius: 0.625rem;
-	border: 1px solid transparent;
-	font-weight: 600;
-	transition: all .2s ease;
-}
-
-.btn-primary {
-	background: var(--color-orange-500);
-	color: white;
-}
-.btn-primary:hover { filter: brightness(0.95); }
-
-/* Reveal animation */
-.reveal { opacity: 0; transform: translateY(12px); transition: opacity .5s ease, transform .5s ease; }
-.reveal.in { opacity: 1; transform: translateY(0); }
-
-/* Advanced hovers */
-a.btn:hover { box-shadow: 0 6px 18px rgba(0,0,0,0.08); }
-.btn-outline:hover { transform: translateY(-1px); }
-
-.btn-outline {
-	border-color: var(--color-sky-600);
-	color: var(--color-sky-600);
-	background: transparent;
-}
-.btn-outline:hover {
-	background: color-mix(in oklab, var(--color-sky-100), white 40%);
-}
-
-/* Dark mode tweaks */
-@media (prefers-color-scheme: dark) {
-	:root {
-		--color-background: #0b1220;
-		--color-foreground: #f3f4f6;
-		--color-card: #0f172a;
-		--color-border: #1f2937;
-	}
-}
-
-/* Font utility for headings */
-.font-display { font-family: var(--font-display); }

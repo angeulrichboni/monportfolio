@@ -1,0 +1,38 @@
+{
+  "title": "Compétences & Expertise",
+  "subtitle": "Un aperçu complet de ma stack technique et de mes niveaux de maîtrise",
+  "radarTitle": "Radar de Compétences",
+  "categories": {
+    "ml": {
+      "title": "Machine Learning & IA",
+      "desc": "TensorFlow, PyTorch, Scikit-learn, Keras, OpenCV, Hugging Face"
+    },
+    "data": {
+      "title": "Ingénierie Big Data",
+      "desc": "Apache Spark, Écosystème Hadoop, Kafka, Airflow, SQL/NoSQL"
+    },
+    "cloud": {
+      "title": "Cloud & DevOps",
+      "desc": "AWS (EC2, S3, EMR), Docker, Kubernetes, CI/CD, Git"
+    }
+  },
+  "proficiency": "Maîtrise",
+  "levels": {
+    "expert": "Expert",
+    "advanced": "Avancé",
+    "intermediate": "Intermédiaire"
+  },
+  "certifications": "Certifications & Réalisations",
+  "items": [
+    { "id": "s1", "name": "TensorFlow/PyTorch", "category": "Machine Learning", "level": 5 },
+    { "id": "s2", "name": "Vision par Ordinateur", "category": "Machine Learning", "level": 4 },
+    { "id": "s3", "name": "Spark/Hadoop", "category": "Big Data", "level": 4 },
+    { "id": "s4", "name": "AWS/Docker", "category": "DevOps", "level": 3 },
+    { "id": "s5", "name": "SQL/NoSQL", "category": "Big Data", "level": 4 },
+    { "id": "s6", "name": "Python", "category": "Langages", "level": 5 }
+  ],
+  "certificationsList": [
+    { "id": "c1", "name": "Certificat Développeur TensorFlow", "organization": "Google", "year": 2023 },
+    { "id": "c2", "name": "Architecte de Solutions Certifié AWS", "organization": "Amazon Web Services", "year": 2022 }
+  ]
+}

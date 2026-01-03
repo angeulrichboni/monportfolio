@@ -1,0 +1,16 @@
+{
+  "mainMenu": "Menu Principal",
+  "items": {
+    "home": "Accueil",
+    "dashboard": "Tableau de bord",
+    "projects": "Projets",
+    "education": "Formation",
+    "experiences": "Expériences",
+    "skills": "Compétences",
+    "blog": "Blog",
+    "contact": "Contact"
+  },
+  "admin": "Administration",
+  "signOut": "Déconnexion",
+  "viewSite": "Voir le site"
+}
