@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { projects, Project } from "../../data/projects";
+import { projects } from "../../data/projects";
 import { useI18n } from "../../components/I18nProvider";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -88,7 +88,7 @@ export default function AllProjectsPage() {
                 {/* Project Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <AnimatePresence mode="popLayout">
-                        {filteredProjects.map((p, idx) => (
+                        {filteredProjects.map((p) => (
                             <motion.article
                                 layout
                                 initial={{ opacity: 0, scale: 0.9 }}
