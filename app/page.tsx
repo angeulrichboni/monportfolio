@@ -17,7 +17,7 @@ import { Expertise } from "../components/sections/Expertise";
 import { Reveal } from "../components/Reveal";
 
 export default function Home() {
-  const { t, lang } = useI18n();
+  const { t } = useI18n();
 
   return (
     <main className="w-full bg-slate-50 overflow-hidden font-sans">
