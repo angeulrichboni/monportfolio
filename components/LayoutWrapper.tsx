@@ -11,7 +11,8 @@ export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     // Hide on /admin routes, /login, and /projets/[slug] (for header specifically as per original logic)
     const isAdmin = pathname?.startsWith("/admin");
     const isLogin = pathname?.startsWith("/login");
-    const isProjectDetail = pathname?.startsWith("/projets/") && pathname.split("/").length > 2;
+    // const isProjectDetail = pathname?.startsWith("/projets/") && pathname.split("/").length > 2;
+
 
     const shouldHideChrome = isAdmin || isLogin;
 

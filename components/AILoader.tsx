@@ -39,7 +39,7 @@ export default function AILoader() {
     }, []);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 pointer-events-none">
             {/* Animated background particles */}
             <div className="absolute inset-0 overflow-hidden">
                 {dimensions.width > 0 && [...Array(20)].map((_, i) => (

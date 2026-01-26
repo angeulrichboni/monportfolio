@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Sparkles, Save, Building, ListPlus, Trash2 } from "lucide-react";
+import { Sparkles, Save, Building, ListPlus, Trash2, ArrowLeft, Calendar, GripVertical, Rocket, Languages, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 // -- Types mirroring data/experiences.ts --
@@ -85,7 +85,7 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
             setFormData(prev => {
                 const translate = (loc: LocalizedString) => {
                     const frVal = getStr(loc, 'fr');
-                    return getStr(loc, 'en') ? loc : { fr: frVal, en: `[Translated] ${frVal}` };
+                    return getStr(loc, 'en') ? loc : { fr: frVal, en: `[AI] ${frVal}` };
                 };
 
                 return {
@@ -99,131 +99,248 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
         }, 1500);
     };
 
-    return (
-        <div className="max-w-5xl mx-auto space-y-8 pb-20">
+    // --- Common Styles ---
+    const inputClass = "w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-slate-50/30 text-sm focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all shadow-sm outline-none placeholder:text-slate-400";
+    const labelClass = "block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 ml-1";
+    const cardClass = "bg-white/80 backdrop-blur-xl rounded-3xl border border-white/60 shadow-xl shadow-slate-200/40 p-6 sm:p-8 relative overflow-hidden";
 
-            <div className="flex items-center justify-between">
-                <div>
-                    <div className="flex items-center gap-2 text-sm text-slate-500 mb-1">
-                        <Link href="/admin/experiences" className="hover:text-blue-600 transition-colors">Expériences</Link>
-                        <span>/</span>
-                        <span>{isEditing ? "Édition" : "Nouvelle"}</span>
+    return (
+        <div className="max-w-6xl mx-auto space-y-8 pb-24 font-sans text-slate-800">
+
+            {/* Sticky Header */}
+            <div className="sticky top-4 z-40 bg-white/80 backdrop-blur-md rounded-2xl border border-white/40 shadow-sm p-4 flex items-center justify-between mb-8">
+                <div className="flex items-center gap-4">
+                    <Link href="/admin/experiences" className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500">
+                        <ArrowLeft className="w-5 h-5" />
+                    </Link>
+                    <div>
+                        <div className="flex items-center gap-2 text-xs font-medium text-slate-400">
+                            <span>Carrière</span>
+                            <span>/</span>
+                            <span className="text-blue-500">{isEditing ? "Édition" : "Nouveau poste"}</span>
+                        </div>
+                        <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-blue-700">
+                            {isEditing ? getStr(formData.company, 'fr') || "Expérience" : "Ajouter une expérience"}
+                        </h1>
                     </div>
-                    <h1 className="text-2xl font-bold text-slate-900">{isEditing ? `Modifier : ${getStr(formData.company, 'fr')}` : "Ajouter une expérience"}</h1>
                 </div>
                 <div className="flex gap-3">
                     <Link href="/admin/experiences">
-                        <Button variant="ghost" className="text-slate-600">Annuler</Button>
+                        <Button variant="ghost" className="text-slate-600 hover:bg-slate-100 rounded-xl">Annuler</Button>
                     </Link>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20">
+                    <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/25 rounded-xl px-6">
                         <Save className="w-4 h-4 mr-2" />
-                        Enregistrer
+                        Sauvegarder
                     </Button>
                 </div>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
 
-                <div className="lg:col-span-2 space-y-8">
+                {/* Left Column (Main) */}
+                <div className="lg:col-span-8 space-y-8">
 
-                    <section className="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 space-y-6">
-                        <h2 className="font-semibold text-slate-900 border-b border-slate-100 pb-4 flex items-center gap-2">
-                            <Building className="w-5 h-5 text-slate-400" />
-                            Contexte
+                    {/* 1. Context (Dates) */}
+                    <section className={cardClass}>
+                        <div className="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full -z-10"></div>
+                        <h2 className="text-lg font-bold text-slate-900 mb-6 flex items-center gap-2">
+                            <span className="w-2 h-6 rounded-full bg-blue-500"></span>
+                            Contexte Temporel
                         </h2>
-                        <div className="grid grid-cols-2 gap-6">
-                            <div className="col-span-2 grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="label-sm">Date de début</label>
-                                    <input type="month" className="input-std" value={formData.start_date} onChange={e => setFormData({ ...formData, start_date: e.target.value })} />
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div>
+                                <label className={labelClass}>Début du contrat</label>
+                                <div className="relative">
+                                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                                    <input 
+                                        type="month" 
+                                        className={`${inputClass} pl-10 cursor-pointer`} 
+                                        value={formData.start_date} 
+                                        onChange={e => setFormData({ ...formData, start_date: e.target.value })} 
+                                    />
                                 </div>
-                                <div>
-                                    <label className="label-sm">Date de fin</label>
-                                    <input type="month" className="input-std" value={formData.end_date} onChange={e => setFormData({ ...formData, end_date: e.target.value })} />
-                                    <div className="mt-2 flex items-center gap-2">
-                                        <input type="checkbox" checked={!formData.end_date} onChange={e => setFormData({ ...formData, end_date: e.target.checked ? "" : formData.end_date })} className="rounded border-slate-300 text-blue-600" />
-                                        <label className="text-xs text-slate-600">Poste actuel</label>
-                                    </div>
+                            </div>
+                            <div>
+                                <div className="flex justify-between items-center mb-2">
+                                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Fin du contrat</label>
+                                    
+                                    {/* Toggle for "Current Position" */}
+                                    <label className="flex items-center gap-2 cursor-pointer group">
+                                        <span className="text-[10px] font-bold text-slate-400 group-hover:text-blue-500 transition-colors">POSTE ACTUEL</span>
+                                        <div className="relative inline-flex items-center">
+                                            <input type="checkbox" checked={!formData.end_date} onChange={e => setFormData({ ...formData, end_date: e.target.checked ? "" : (formData.end_date || new Date().toISOString().slice(0, 7)) })} className="sr-only peer" />
+                                            <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-500"></div>
+                                        </div>
+                                    </label>
+                                </div>
+                                
+                                <div className={`relative transition-opacity duration-300 ${!formData.end_date ? 'opacity-50 pointer-events-none grayscale' : 'opacity-100'}`}>
+                                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
+                                    <input 
+                                        type="month" 
+                                        className={`${inputClass} pl-10 cursor-pointer`} 
+                                        value={formData.end_date} 
+                                        disabled={!formData.end_date}
+                                        onChange={e => setFormData({ ...formData, end_date: e.target.value })} 
+                                    />
                                 </div>
                             </div>
                         </div>
                     </section>
 
-                    <section className="bg-white rounded-2xl border border-blue-100 shadow-sm overflow-hidden ring-1 ring-blue-50">
-                        <div className="bg-gradient-to-r from-slate-50 to-blue-50/50 px-6 py-4 border-b border-blue-100 flex justify-between items-center">
-                            <div className="flex items-center gap-2">
-                                <div className="p-1.5 bg-blue-100 rounded-lg">
-                                    <Sparkles className="w-4 h-4 text-blue-600" />
+                    {/* 2. Details (Split View) */}
+                    <section className="bg-white rounded-3xl border border-slate-200 shadow-2xl shadow-slate-200/40 overflow-hidden ring-4 ring-slate-50">
+                         {/* Magic Bar */}
+                         <div className="bg-gradient-to-r from-slate-50 via-white to-blue-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center relative">
+                            <div className="flex items-center gap-3">
+                                <div className="p-2 bg-white rounded-lg shadow-sm border border-slate-100">
+                                    <Languages className="w-5 h-5 text-blue-600" />
                                 </div>
-                                <h2 className="font-semibold text-slate-900">Détails (Multilingue)</h2>
+                                <div>
+                                    <h2 className="font-bold text-slate-800 text-sm">Détails du Poste</h2>
+                                    <p className="text-xs text-slate-400">Description & Missions</p>
+                                </div>
                             </div>
-                            <button type="button" onClick={handleMagicTranslate} className="group flex items-center gap-2 text-xs font-semibold bg-white text-slate-700 hover:text-blue-600 px-3 py-1.5 rounded-full border border-blue-200 shadow-sm hover:shadow hover:border-blue-300 transition-all active:scale-95">
-                                <Sparkles className={`w-3 h-3 ${isTranslating ? 'animate-spin text-purple-600' : 'text-purple-500'}`} />
-                                {isTranslating ? 'Traduction...' : 'Auto-Translate'}
+                            
+                            <button
+                                type="button"
+                                onClick={handleMagicTranslate}
+                                className="group relative flex items-center gap-2 text-xs font-bold bg-white text-blue-700 px-4 py-2 rounded-full border border-blue-100 shadow-sm hover:shadow-md hover:border-blue-300 transition-all active:scale-95 overflow-hidden"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-indigo-50 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <span className="relative flex items-center gap-2">
+                                    <Sparkles className={`w-3.5 h-3.5 ${isTranslating ? 'animate-spin text-purple-600' : 'text-purple-500'}`} />
+                                    {isTranslating ? 'Traduction...' : 'Auto-Translate'}
+                                </span>
                             </button>
                         </div>
 
-                        <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6 relative">
+                        <div className="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-100 relative">
 
-                            {/* FR */}
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-2 pb-2"><span className="w-4 h-3 bg-slate-200 block"></span><span className="text-xs font-bold text-slate-400">FR</span></div>
-                                <div>
-                                    <label className="label-sm">Intitulé du poste</label>
-                                    <input className="input-std" value={getStr(formData.title, 'fr')} onChange={e => updateLoc('title', 'fr', e.target.value)} />
+                            {/* FR Column */}
+                            <div className="p-6 space-y-6 bg-white">
+                                <div className="flex items-center gap-2 mb-4">
+                                    <span className="w-2 h-2 rounded-full bg-blue-500"></span>
+                                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Français</span>
                                 </div>
-                                <div>
-                                    <label className="label-sm">Entreprise</label>
-                                    <input className="input-std" value={getStr(formData.company, 'fr')} onChange={e => updateLoc('company', 'fr', e.target.value)} />
-                                </div>
-                                <div>
-                                    <label className="label-sm">Missions</label>
-                                    <div className="space-y-2">
-                                        {formData.description.map((task, i) => (
-                                            <div key={i} className="flex gap-2">
-                                                <input className="input-std flex-1" value={getStr(task, 'fr')} onChange={e => updateDesc(i, 'fr', e.target.value)} />
-                                                <button onClick={() => removeDescTask(i)} className="p-2 text-slate-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
-                                            </div>
-                                        ))}
-                                        <button onClick={addDescTask} className="text-xs text-blue-600 hover:underline flex items-center gap-1"><ListPlus className="w-3 h-3" /> Ajouter</button>
+
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className={labelClass}>Intitulé du poste</label>
+                                        <input className={inputClass} value={getStr(formData.title, 'fr')} onChange={e => updateLoc('title', 'fr', e.target.value)} placeholder="Ex: Développeur Fullstack" />
+                                    </div>
+                                    <div>
+                                        <label className={labelClass}>Entreprise</label>
+                                        <div className="relative">
+                                            <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                            <input className={`${inputClass} pl-10`} value={getStr(formData.company, 'fr')} onChange={e => updateLoc('company', 'fr', e.target.value)} placeholder="Nom de l'entreprise" />
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Dynamic Task List FR */}
+                                    <div>
+                                        <div className="flex justify-between items-end mb-2">
+                                            <label className={labelClass}>Missions & Responsabilités</label>
+                                        </div>
+                                        <div className="space-y-3">
+                                            {formData.description.map((task, i) => (
+                                                <div key={i} className="flex gap-2 group">
+                                                    <div className="mt-2.5 text-slate-300 cursor-grab active:cursor-grabbing hover:text-slate-400">
+                                                        <GripVertical className="w-4 h-4" />
+                                                    </div>
+                                                    <textarea 
+                                                        rows={2}
+                                                        className={`${inputClass} resize-none`} 
+                                                        value={getStr(task, 'fr')} 
+                                                        onChange={e => updateDesc(i, 'fr', e.target.value)}
+                                                        placeholder={`Mission ${i + 1}...`}
+                                                    />
+                                                    <button onClick={() => removeDescTask(i)} className="mt-2 p-1.5 h-fit text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+                                                        <Trash2 className="w-4 h-4" />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                            <button 
+                                                onClick={addDescTask} 
+                                                className="w-full py-2 border-2 border-dashed border-slate-200 rounded-xl text-xs font-bold text-slate-400 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-all flex items-center justify-center gap-2 mt-2"
+                                            >
+                                                <ListPlus className="w-4 h-4" /> Ajouter une mission
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* EN */}
-                            <div className="space-y-4">
-                                <div className="flex items-center gap-2 pb-2"><span className="w-4 h-3 bg-slate-200 block"></span><span className="text-xs font-bold text-slate-400">EN</span></div>
-                                <div>
-                                    <label className="label-sm">Job Title</label>
-                                    <input className="input-std bg-purple-50/20 border-purple-100" value={getStr(formData.title, 'en')} onChange={e => updateLoc('title', 'en', e.target.value)} />
+                            {/* EN Column */}
+                            <div className="p-6 space-y-6 bg-slate-50/30 relative">
+                                {isTranslating && (
+                                    <div className="absolute inset-0 bg-white/60 backdrop-blur-sm z-20 flex flex-col items-center justify-center">
+                                        <div className="w-10 h-10 border-4 border-blue-500/30 border-t-blue-600 rounded-full animate-spin"></div>
+                                        <p className="mt-3 text-xs font-bold text-blue-600 animate-pulse">Traduction...</p>
+                                    </div>
+                                )}
+
+                                <div className="flex items-center gap-2 mb-4">
+                                    <span className="w-2 h-2 rounded-full bg-red-500"></span>
+                                    <span className="text-xs font-bold uppercase tracking-wider text-slate-400">English</span>
                                 </div>
-                                <div>
-                                    <label className="label-sm">Company</label>
-                                    <input className="input-std bg-purple-50/20 border-purple-100" value={getStr(formData.company, 'en')} onChange={e => updateLoc('company', 'en', e.target.value)} />
-                                </div>
-                                <div>
-                                    <label className="label-sm">Tasks</label>
-                                    <div className="space-y-2">
-                                        {formData.description.map((task, i) => (
-                                            <div key={i} className="flex gap-2">
-                                                <input className="input-std bg-purple-50/20 border-purple-100 flex-1" value={getStr(task, 'en')} onChange={e => updateDesc(i, 'en', e.target.value)} />
-                                            </div>
-                                        ))}
+
+                                <div className="space-y-4">
+                                    <div>
+                                        <label className={labelClass}>Job Title</label>
+                                        <input className={`${inputClass} border-blue-100 bg-blue-50/10 focus:bg-white`} value={getStr(formData.title, 'en')} onChange={e => updateLoc('title', 'en', e.target.value)} placeholder="Ex: Fullstack Developer" />
+                                    </div>
+                                    <div>
+                                        <label className={labelClass}>Company</label>
+                                        <div className="relative">
+                                            <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                                            <input className={`${inputClass} pl-10 border-blue-100 bg-blue-50/10 focus:bg-white`} value={getStr(formData.company, 'en')} onChange={e => updateLoc('company', 'en', e.target.value)} placeholder="Company Name" />
+                                        </div>
+                                    </div>
+
+                                    {/* Dynamic Task List EN (Read-only structure mostly, mirrors FR count) */}
+                                    <div>
+                                        <label className={labelClass}>Tasks & Responsibilities</label>
+                                        <div className="space-y-3">
+                                            {formData.description.map((task, i) => (
+                                                <div key={i} className="flex gap-2">
+                                                    <div className="w-4 mt-2.5"></div> {/* Spacer for grip */}
+                                                    <textarea 
+                                                        rows={2}
+                                                        className={`${inputClass} resize-none border-blue-100 bg-blue-50/10 focus:bg-white`} 
+                                                        value={getStr(task, 'en')} 
+                                                        onChange={e => updateDesc(i, 'en', e.target.value)}
+                                                        placeholder={`Task ${i + 1}...`}
+                                                    />
+                                                    <div className="w-7"></div> {/* Spacer for delete button */}
+                                                </div>
+                                            ))}
+                                            {/* Spacer for Add Button */}
+                                            <div className="h-[34px] mt-2"></div> 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </section>
                 </div>
 
-                <div className="space-y-6">
-                    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-5">
-                        <h3 className="font-semibold text-slate-900 mb-4 text-sm">Technologies</h3>
-                        <div className="space-y-3">
+                {/* Right Column (Sidebar) */}
+                <div className="lg:col-span-4 space-y-6">
+
+                    {/* Tech Stack Widget */}
+                    <div className={cardClass}>
+                        <h3 className="font-bold text-slate-900 mb-4 text-sm flex items-center gap-2">
+                            <Rocket className="w-4 h-4 text-amber-500" />
+                            Technologies & Outils
+                        </h3>
+                        <div className="space-y-4">
                             <div className="flex gap-2">
                                 <input
-                                    className="input-std"
-                                    placeholder="Add tag"
+                                    type="text"
+                                    placeholder="React, Python, Figma..."
                                     value={newTech}
                                     onChange={e => setNewTech(e.target.value)}
                                     onKeyDown={e => {
@@ -232,13 +349,23 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                                             setNewTech("");
                                         }
                                     }}
+                                    className={`${inputClass} py-1.5`}
                                 />
                             </div>
-                            <div className="flex flex-wrap gap-2">
+                            
+                            <div className="flex flex-wrap gap-2 min-h-[60px] content-start p-3 bg-slate-50 rounded-xl border border-slate-100">
+                                {(!formData.technologies || formData.technologies.length === 0) && (
+                                    <span className="text-xs text-slate-400 italic p-1">Aucune technologie...</span>
+                                )}
                                 {formData.technologies?.map(t => (
-                                    <span key={t} className="px-2 py-1 bg-slate-100 text-xs rounded flex gap-1 items-center">
+                                    <span key={t} className="pl-3 pr-2 py-1 bg-white text-slate-700 text-xs font-bold rounded-lg flex items-center gap-1 border border-slate-200 shadow-sm group hover:border-red-200 transition-colors">
                                         {t}
-                                        <Trash2 className="w-3 h-3 cursor-pointer hover:text-red-500" onClick={() => setFormData(p => ({ ...p, technologies: p.technologies?.filter(tech => tech !== t) }))} />
+                                        <button 
+                                            onClick={() => setFormData(p => ({ ...p, technologies: p.technologies?.filter(tech => tech !== t) }))}
+                                            className="p-0.5 hover:bg-red-50 text-slate-300 hover:text-red-500 rounded-md transition-colors"
+                                        >
+                                            <X className="w-3 h-3" />
+                                        </button>
                                     </span>
                                 ))}
                             </div>
@@ -247,11 +374,6 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                 </div>
 
             </div>
-
-            <style jsx global>{`
-        .label-sm { @apply block text-xs font-medium text-slate-500 mb-1.5; }
-        .input-std { @apply w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:ring-blue-500 focus:border-blue-500 outline-none transition-all; }
-      `}</style>
         </div>
     );
 }

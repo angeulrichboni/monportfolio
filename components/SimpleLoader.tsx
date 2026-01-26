@@ -13,7 +13,6 @@ export default function SimpleLoader() {
                 transition={{ duration: 0.8, ease: "easeInOut" }}
                 className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-600 via-sky-400 to-blue-600"
             />
-            {/* Optional subtle spinner in corner if needed, but progress bar is usually enough for nav */}
         </div>
     );
 }
