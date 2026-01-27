@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Sparkles, Save, Building, ListPlus, Trash2, ArrowLeft, Calendar, GripVertical, Rocket, Languages, X } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { AIService } from "@/app/services/ai.service";
 
 // -- Types mirroring data/experiences.ts --
 type LocalizedString = string | { fr: string; en: string };
@@ -26,9 +27,11 @@ export interface ExperienceData {
 interface ExperienceFormProps {
     initialData?: ExperienceData;
     isEditing?: boolean;
+    onSubmit?: (data: ExperienceData) => Promise<void>;
+    isSubmitting?: boolean;
 }
 
-export function ExperienceForm({ initialData, isEditing = false }: ExperienceFormProps) {
+export function ExperienceForm({ initialData, isEditing = false, onSubmit, isSubmitting = false }: ExperienceFormProps) {
     // Default State
     const [formData, setFormData] = useState<ExperienceData>(initialData || {
         title: { fr: "", en: "" },
@@ -79,24 +82,43 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
         }));
     };
 
-    const handleMagicTranslate = () => {
+    const handleMagicTranslate = async () => {
         setIsTranslating(true);
-        setTimeout(() => {
-            setFormData(prev => {
-                const translate = (loc: LocalizedString) => {
-                    const frVal = getStr(loc, 'fr');
-                    return getStr(loc, 'en') ? loc : { fr: frVal, en: `[AI] ${frVal}` };
-                };
+        try {
+            // Translate title
+            const titleFr = getStr(formData.title, 'fr');
+            const titleEn = titleFr ? await AIService.translate(titleFr) : "";
 
-                return {
-                    ...prev,
-                    title: translate(prev.title),
-                    company: translate(prev.company),
-                    description: prev.description.map(translate)
-                };
+            // Translate company
+            const companyFr = getStr(formData.company, 'fr');
+            const companyEn = companyFr ? await AIService.translate(companyFr) : "";
+
+            // Translate descriptions (parallel)
+            const descPromises = formData.description.map(desc => {
+                const frText = getStr(desc, 'fr');
+                return frText ? AIService.translate(frText) : Promise.resolve("");
             });
+            const descEn = await Promise.all(descPromises);
+
+            // Helper to ensure we have an object before spreading
+            const toObj = (val: LocalizedString) => typeof val === 'string' ? { fr: val, en: "" } : val;
+
+            // Update form with translations
+            setFormData(prev => ({
+                ...prev,
+                title: { ...toObj(prev.title), en: titleEn },
+                company: { ...toObj(prev.company), en: companyEn },
+                description: prev.description.map((desc, i) => ({
+                    ...toObj(desc),
+                    en: descEn[i]
+                }))
+            }));
+        } catch (err) {
+            console.error('Translation failed:', err);
+            alert('Erreur de traduction. Veuillez réessayer.');
+        } finally {
             setIsTranslating(false);
-        }, 1500);
+        }
     };
 
     // --- Common Styles ---
@@ -128,9 +150,21 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                     <Link href="/admin/experiences">
                         <Button variant="ghost" className="text-slate-600 hover:bg-slate-100 rounded-xl">Annuler</Button>
                     </Link>
-                    <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/25 rounded-xl px-6">
+                    <Button
+                        onClick={async () => {
+                            if (onSubmit) {
+                                try {
+                                    await onSubmit(formData);
+                                } catch {
+                                    // Error handled by parent
+                                }
+                            }
+                        }}
+                        disabled={isSubmitting}
+                        className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/25 rounded-xl px-6"
+                    >
                         <Save className="w-4 h-4 mr-2" />
-                        Sauvegarder
+                        {isSubmitting ? 'Enregistrement...' : 'Sauvegarder'}
                     </Button>
                 </div>
             </div>
@@ -147,24 +181,24 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                             <span className="w-2 h-6 rounded-full bg-blue-500"></span>
                             Contexte Temporel
                         </h2>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
                                 <label className={labelClass}>Début du contrat</label>
                                 <div className="relative">
                                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-                                    <input 
-                                        type="month" 
-                                        className={`${inputClass} pl-10 cursor-pointer`} 
-                                        value={formData.start_date} 
-                                        onChange={e => setFormData({ ...formData, start_date: e.target.value })} 
+                                    <input
+                                        type="month"
+                                        className={`${inputClass} pl-10 cursor-pointer`}
+                                        value={formData.start_date}
+                                        onChange={e => setFormData({ ...formData, start_date: e.target.value })}
                                     />
                                 </div>
                             </div>
                             <div>
                                 <div className="flex justify-between items-center mb-2">
                                     <label className="block text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Fin du contrat</label>
-                                    
+
                                     {/* Toggle for "Current Position" */}
                                     <label className="flex items-center gap-2 cursor-pointer group">
                                         <span className="text-[10px] font-bold text-slate-400 group-hover:text-blue-500 transition-colors">POSTE ACTUEL</span>
@@ -174,15 +208,15 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                                         </div>
                                     </label>
                                 </div>
-                                
+
                                 <div className={`relative transition-opacity duration-300 ${!formData.end_date ? 'opacity-50 pointer-events-none grayscale' : 'opacity-100'}`}>
                                     <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-                                    <input 
-                                        type="month" 
-                                        className={`${inputClass} pl-10 cursor-pointer`} 
-                                        value={formData.end_date} 
+                                    <input
+                                        type="month"
+                                        className={`${inputClass} pl-10 cursor-pointer`}
+                                        value={formData.end_date}
                                         disabled={!formData.end_date}
-                                        onChange={e => setFormData({ ...formData, end_date: e.target.value })} 
+                                        onChange={e => setFormData({ ...formData, end_date: e.target.value })}
                                     />
                                 </div>
                             </div>
@@ -191,8 +225,8 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
 
                     {/* 2. Details (Split View) */}
                     <section className="bg-white rounded-3xl border border-slate-200 shadow-2xl shadow-slate-200/40 overflow-hidden ring-4 ring-slate-50">
-                         {/* Magic Bar */}
-                         <div className="bg-gradient-to-r from-slate-50 via-white to-blue-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center relative">
+                        {/* Magic Bar */}
+                        <div className="bg-gradient-to-r from-slate-50 via-white to-blue-50 px-6 py-4 border-b border-slate-100 flex justify-between items-center relative">
                             <div className="flex items-center gap-3">
                                 <div className="p-2 bg-white rounded-lg shadow-sm border border-slate-100">
                                     <Languages className="w-5 h-5 text-blue-600" />
@@ -202,7 +236,7 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                                     <p className="text-xs text-slate-400">Description & Missions</p>
                                 </div>
                             </div>
-                            
+
                             <button
                                 type="button"
                                 onClick={handleMagicTranslate}
@@ -237,7 +271,7 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                                             <input className={`${inputClass} pl-10`} value={getStr(formData.company, 'fr')} onChange={e => updateLoc('company', 'fr', e.target.value)} placeholder="Nom de l'entreprise" />
                                         </div>
                                     </div>
-                                    
+
                                     {/* Dynamic Task List FR */}
                                     <div>
                                         <div className="flex justify-between items-end mb-2">
@@ -249,10 +283,10 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                                                     <div className="mt-2.5 text-slate-300 cursor-grab active:cursor-grabbing hover:text-slate-400">
                                                         <GripVertical className="w-4 h-4" />
                                                     </div>
-                                                    <textarea 
+                                                    <textarea
                                                         rows={2}
-                                                        className={`${inputClass} resize-none`} 
-                                                        value={getStr(task, 'fr')} 
+                                                        className={`${inputClass} resize-none`}
+                                                        value={getStr(task, 'fr')}
                                                         onChange={e => updateDesc(i, 'fr', e.target.value)}
                                                         placeholder={`Mission ${i + 1}...`}
                                                     />
@@ -261,8 +295,8 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                                                     </button>
                                                 </div>
                                             ))}
-                                            <button 
-                                                onClick={addDescTask} 
+                                            <button
+                                                onClick={addDescTask}
                                                 className="w-full py-2 border-2 border-dashed border-slate-200 rounded-xl text-xs font-bold text-slate-400 hover:text-blue-500 hover:border-blue-300 hover:bg-blue-50 transition-all flex items-center justify-center gap-2 mt-2"
                                             >
                                                 <ListPlus className="w-4 h-4" /> Ajouter une mission
@@ -306,10 +340,10 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                                             {formData.description.map((task, i) => (
                                                 <div key={i} className="flex gap-2">
                                                     <div className="w-4 mt-2.5"></div> {/* Spacer for grip */}
-                                                    <textarea 
+                                                    <textarea
                                                         rows={2}
-                                                        className={`${inputClass} resize-none border-blue-100 bg-blue-50/10 focus:bg-white`} 
-                                                        value={getStr(task, 'en')} 
+                                                        className={`${inputClass} resize-none border-blue-100 bg-blue-50/10 focus:bg-white`}
+                                                        value={getStr(task, 'en')}
                                                         onChange={e => updateDesc(i, 'en', e.target.value)}
                                                         placeholder={`Task ${i + 1}...`}
                                                     />
@@ -317,7 +351,7 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                                                 </div>
                                             ))}
                                             {/* Spacer for Add Button */}
-                                            <div className="h-[34px] mt-2"></div> 
+                                            <div className="h-[34px] mt-2"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -352,7 +386,7 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                                     className={`${inputClass} py-1.5`}
                                 />
                             </div>
-                            
+
                             <div className="flex flex-wrap gap-2 min-h-[60px] content-start p-3 bg-slate-50 rounded-xl border border-slate-100">
                                 {(!formData.technologies || formData.technologies.length === 0) && (
                                     <span className="text-xs text-slate-400 italic p-1">Aucune technologie...</span>
@@ -360,7 +394,7 @@ export function ExperienceForm({ initialData, isEditing = false }: ExperienceFor
                                 {formData.technologies?.map(t => (
                                     <span key={t} className="pl-3 pr-2 py-1 bg-white text-slate-700 text-xs font-bold rounded-lg flex items-center gap-1 border border-slate-200 shadow-sm group hover:border-red-200 transition-colors">
                                         {t}
-                                        <button 
+                                        <button
                                             onClick={() => setFormData(p => ({ ...p, technologies: p.technologies?.filter(tech => tech !== t) }))}
                                             className="p-0.5 hover:bg-red-50 text-slate-300 hover:text-red-500 rounded-md transition-colors"
                                         >
