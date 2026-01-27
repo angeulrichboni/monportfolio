@@ -7,20 +7,24 @@ import { SiteFooter } from "./SiteFooter";
 export function LayoutWrapper({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
 
-    // Logic to determine if we are on a project detail page
-    // Route: /projets/[slug]
-    // We want to show header on /projets but hide on /projets/agent-x
-    const isProjectDetail = pathname?.startsWith("/projets/") && pathname.split("/").length > 2;
+    // Logic to determine if we should hide the public header/footer
+    // Hide on /admin routes, /login, and /projets/[slug] (for header specifically as per original logic)
+    const isAdmin = pathname?.startsWith("/admin");
+    const isLogin = pathname?.startsWith("/login");
+    // const isProjectDetail = pathname?.startsWith("/projets/") && pathname.split("/").length > 2;
 
-    // Additional check if we want to support english route /en/projects/... if localized routing was used, 
-    // but current implementation seems to use cookie/searchParam for lang, so pathname is stable.
+
+    const shouldHideChrome = isAdmin || isLogin;
 
     return (
         <>
-            {/* Hide header on project detail pages */}
-            {!pathname.startsWith('/projets/') && <SiteHeader />}
+            {/* Show Header only if NOT (admin or login) AND NOT project detail */}
+            {!shouldHideChrome && !pathname.startsWith('/projets/') && <SiteHeader />}
+
             {children}
-            <SiteFooter />
+
+            {/* Show Footer only if NOT (admin or login) */}
+            {!shouldHideChrome && <SiteFooter />}
         </>
     );
 }

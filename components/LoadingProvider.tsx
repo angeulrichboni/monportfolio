@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, ReactNode } from "react
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion } from "framer-motion";
 import AILoader from "./AILoader";
+// import SimpleLoader from "./SimpleLoader";
 
 interface LoadingContextType {
     isLoading: boolean;
@@ -11,7 +12,7 @@ interface LoadingContextType {
 }
 
 const LoadingContext = createContext<LoadingContextType>({
-    isLoading: true,
+    isLoading: false,
     setIsLoading: () => { },
 });
 
@@ -22,43 +23,41 @@ export default function LoadingProvider({ children }: { children: ReactNode }) {
     const [showLoader, setShowLoader] = useState(true);
     const pathname = usePathname();
 
-    // Initial page load
+    // Disable loader completely for admin routes to avoid blocking issues
+    const isAdminRoute = pathname?.startsWith('/admin');
+
     useEffect(() => {
-        // Simulate initial loading
-        const timer = setTimeout(() => {
+        // Skip loader for admin routes entirely
+        if (isAdminRoute) {
+            setShowLoader(false);
             setIsLoading(false);
-            // Keep loader visible for smooth exit animation
-            setTimeout(() => setShowLoader(false), 500);
-        }, 2000); // Show loader for 2 seconds on initial load
-
-        return () => clearTimeout(timer);
-    }, []);
-
-    // Handle route changes
-    useEffect(() => {
-        // Don't show loader on first mount (handled above)
-        if (showLoader === false) {
-            setIsLoading(true);
-            setShowLoader(true);
-
-            const timer = setTimeout(() => {
-                setIsLoading(false);
-                setTimeout(() => setShowLoader(false), 500);
-            }, 1000); // Shorter duration for page transitions
-
-            return () => clearTimeout(timer);
+            return;
         }
-    }, [pathname]);
+
+        // For non-admin routes, show loader briefly
+        setIsLoading(true);
+        setShowLoader(true);
+
+        const hideTimer = setTimeout(() => {
+            setIsLoading(false);
+            setTimeout(() => setShowLoader(false), 300);
+        }, 1500);
+
+        return () => {
+            clearTimeout(hideTimer);
+        };
+    }, [pathname, isAdminRoute]);
 
     return (
         <LoadingContext.Provider value={{ isLoading, setIsLoading }}>
             <AnimatePresence mode="wait">
-                {showLoader && (
+                {showLoader && !isAdminRoute && (
                     <motion.div
                         key="loader"
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 0.5 }}
+                        transition={{ duration: 0.3 }}
+                        className="fixed inset-0 z-[60] pointer-events-none"
                     >
                         <AILoader />
                     </motion.div>

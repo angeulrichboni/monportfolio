@@ -1,33 +1,33 @@
 "use client";
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { Button } from './ui/Button';
-import { Card } from './ui/Card';
-import { Project, ProjectAsset } from '../data/projects';
-import { useI18n } from './I18nProvider';
-import { cn } from '../lib/utils';
-// Use lucide-react icons as used in template
-import {
-  ArrowLeft,
-  Github,
-  ExternalLink,
-  Server,
-  Users,
-  Linkedin,
-  Play,
-  Maximize2,
-  X,
-  ChevronLeft,
-  ChevronRight,
-  Calendar,
-  CheckCircle2,
-  Clock
-} from 'lucide-react';
+import { useState, useEffect, useCallback } from "react";
+import Link from "next/link";
+import { ArrowLeft, ExternalLink, Github, Calendar, Users, Linkedin, Play, Maximize2, X, ChevronLeft, ChevronRight, CheckCircle2, Clock, Server } from "lucide-react";
+import { useI18n } from "./I18nProvider";
+import { Button } from "./ui/Button";
+import { Card } from "./ui/Card";
 
-interface ProjectDetailsClientProps {
-  project: Project;
+interface Project {
+  id?: string;
+  title: string | { fr: string; en: string };
+  description: string | { fr: string; en: string };
+  content?: string | { fr: string; en: string };
+  category?: string;
+  status?: 'completed' | 'in-progress' | 'planned';
+  is_team?: boolean;
+  cover_image_url?: string;
+  github_url?: string;
+  demo_url?: string;
+  problem_statement?: string | { fr: string; en: string };
+  architecture?: string | { fr: string; en: string };
+  team?: { name: string; role?: string; linkedin_url?: string; portfolio_url?: string; github_url?: string }[];
+  assets?: { type: 'image' | 'video'; url: string; caption?: string | { fr: string; en: string } }[];
+  technologies?: string[];
+  start_date?: string;
+  end_date?: string;
+  created_at?: string;
+  stack: string[];
+  results?: string | { fr: string; en: string };
 }
 
 function pick(value: unknown, lang: "fr" | "en"): string {
@@ -39,39 +39,49 @@ function pick(value: unknown, lang: "fr" | "en"): string {
   return "";
 }
 
+interface ProjectDetailsClientProps {
+  project: Project;
+}
+
 export function ProjectDetailsClient({ project }: ProjectDetailsClientProps) {
-  const { t, lang } = useI18n();
-  const router = useRouter();
-  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const { lang } = useI18n();
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
-  // Prepare gallery data from assets
-  // If no assets, use empty array
   const gallery = project.assets || [];
-
   const featuredVideo = gallery.find((item) => item.type === 'video');
   const remainingMedia = gallery.filter((item) => item !== featuredVideo);
 
-  const openLightbox = (index: number) => setLightboxIndex(index);
-  const closeLightbox = () => setLightboxIndex(null);
-  const nextLightbox = () => setLightboxIndex(prev => (prev !== null && prev < gallery.length - 1 ? prev + 1 : 0));
-  const prevLightbox = () => setLightboxIndex(prev => (prev !== null && prev > 0 ? prev - 1 : gallery.length - 1));
+  const nextLightbox = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (!selectedImage) return;
+    const assets = project.assets?.filter((a) => a.type === 'image') || [];
+    const currentIndex = assets.findIndex((a) => a.url === selectedImage);
+    const nextIndex = (currentIndex + 1) % assets.length;
+    setSelectedImage(assets[nextIndex].url);
+  }, [selectedImage, project.assets]);
 
-  // Handle keyboard navigation for lightbox
+  const prevLightbox = useCallback((e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (!selectedImage) return;
+    const assets = project.assets?.filter((a) => a.type === 'image') || [];
+    const currentIndex = assets.findIndex((a) => a.url === selectedImage);
+    const prevIndex = (currentIndex - 1 + assets.length) % assets.length;
+    setSelectedImage(assets[prevIndex].url);
+  }, [selectedImage, project.assets]);
+
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (lightboxIndex === null) return;
-      if (e.key === 'Escape') closeLightbox();
+      if (!selectedImage) return;
+      if (e.key === 'Escape') setSelectedImage(null);
       if (e.key === 'ArrowRight') nextLightbox();
       if (e.key === 'ArrowLeft') prevLightbox();
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxIndex]);
+  }, [nextLightbox, prevLightbox, selectedImage]);
 
   return (
     <div className="min-h-screen bg-neutral-50 pb-20 font-sans">
-
-      {/* Hero Section */}
       <div className="relative h-[40vh] w-full bg-neutral-900 overflow-hidden">
         {project.cover_image_url && (
           // eslint-disable-next-line @next/next/no-img-element
@@ -94,9 +104,11 @@ export function ProjectDetailsClient({ project }: ProjectDetailsClientProps) {
                   {pick(project.title, lang)}
                 </h1>
                 <div className="mt-4 flex flex-wrap gap-3 items-center">
-                  <span className="rounded-full bg-blue-600 px-3 py-1 text-sm font-medium text-white shadow-sm">
-                    {project.category}
-                  </span>
+                  {project.category && (
+                    <span className="rounded-full bg-blue-600 px-3 py-1 text-sm font-medium text-white shadow-sm">
+                      {project.category}
+                    </span>
+                  )}
 
                   {project.status === 'completed' ? (
                     <span className="rounded-full bg-emerald-500/20 px-3 py-1 text-sm font-medium text-emerald-300 flex items-center border border-emerald-500/30">
@@ -145,10 +157,7 @@ export function ProjectDetailsClient({ project }: ProjectDetailsClientProps) {
 
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="grid gap-8 lg:grid-cols-3">
-
-          {/* Left Column: Main Content */}
           <div className="lg:col-span-2 space-y-8">
-
             <section>
               <h2 className="mb-4 text-2xl font-bold text-neutral-900">
                 {lang === 'fr' ? 'Vue d\'ensemble' : 'Project Overview'}
@@ -163,7 +172,6 @@ export function ProjectDetailsClient({ project }: ProjectDetailsClientProps) {
               )}
             </section>
 
-            {/* Featured Video Section */}
             {featuredVideo && (
               <section className="relative overflow-hidden rounded-xl bg-black shadow-2xl ring-1 ring-gray-900/5">
                 <video
@@ -207,7 +215,6 @@ export function ProjectDetailsClient({ project }: ProjectDetailsClientProps) {
                 <p className="text-neutral-600 mb-6 leading-relaxed">
                   {pick(project.architecture, lang)}
                 </p>
-                {/* Placeholder for diagram - keeping true to template */}
                 <div className="rounded-xl bg-neutral-100 border border-neutral-200 p-8 text-center text-neutral-400 border-dashed border-2">
                   <Server className="mx-auto h-12 w-12 mb-2 opacity-50" />
                   <p className="text-sm font-medium">System Architecture Visualization</p>
@@ -229,7 +236,6 @@ export function ProjectDetailsClient({ project }: ProjectDetailsClientProps) {
                         </div>
                         <div>
                           <p className="font-bold text-neutral-900 text-sm">{member.name}</p>
-                          {/* Role not strictly in schema, assuming Developer/Contributor */}
                           <p className="text-xs text-neutral-500">Contributor</p>
                         </div>
                       </div>
@@ -269,67 +275,62 @@ export function ProjectDetailsClient({ project }: ProjectDetailsClientProps) {
               </section>
             )}
 
-            {/* Media Gallery Grid */}
             {remainingMedia.length > 0 && (
               <section>
                 <h2 className="mb-4 text-2xl font-bold text-neutral-900">
                   {lang === 'fr' ? 'Galerie' : 'Gallery & Screenshots'}
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {remainingMedia.map((item, index) => {
-                    const galleryIndex = gallery.indexOf(item);
-                    return (
-                      <div
-                        key={index}
-                        onClick={() => openLightbox(galleryIndex)}
-                        className={`group relative cursor-pointer overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200 transition-all hover:shadow-lg ${index === 0 && remainingMedia.length % 2 !== 0 ? 'sm:col-span-2 sm:row-span-2' : ''}`}
-                      >
-                        {item.type === 'video' ? (
-                          <div className="relative aspect-video w-full bg-neutral-900 flex items-center justify-center">
-                            <video src={item.url} className="h-full w-full object-cover opacity-80" />
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="rounded-full bg-white/20 p-4 backdrop-blur-sm transition-transform group-hover:scale-110">
-                                <Play className="h-8 w-8 fill-white text-white" />
-                              </div>
+                  {remainingMedia.map((item, index) => (
+                    <div
+                      key={index}
+                      onClick={() => setSelectedImage(item.url)}
+                      className={`group relative cursor-pointer overflow-hidden rounded-xl bg-neutral-100 border border-neutral-200 transition-all hover:shadow-lg ${index === 0 && remainingMedia.length % 2 !== 0 ? 'sm:col-span-2 sm:row-span-2' : ''}`}
+                    >
+                      {item.type === 'video' ? (
+                        <div className="relative aspect-video w-full bg-neutral-900 flex items-center justify-center">
+                          <video src={item.url} className="h-full w-full object-cover opacity-80" />
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="rounded-full bg-white/20 p-4 backdrop-blur-sm transition-transform group-hover:scale-110">
+                              <Play className="h-8 w-8 fill-white text-white" />
                             </div>
                           </div>
-                        ) : (
-                          <div className="relative aspect-video w-full">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={item.url}
-                              alt={pick(item.caption, lang) || 'Gallery image'}
-                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                            <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
-                            <div className="absolute bottom-2 right-2 opacity-0 transition-opacity group-hover:opacity-100">
-                              <div className="rounded-full bg-black/50 p-2 text-white backdrop-blur-sm">
-                                <Maximize2 className="h-4 w-4" />
-                              </div>
+                        </div>
+                      ) : (
+                        <div className="relative aspect-video w-full">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={item.url}
+                            alt={pick(item.caption, lang) || 'Gallery image'}
+                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-black/0 transition-colors group-hover:bg-black/10" />
+                          <div className="absolute bottom-2 right-2 opacity-0 transition-opacity group-hover:opacity-100">
+                            <div className="rounded-full bg-black/50 p-2 text-white backdrop-blur-sm">
+                              <Maximize2 className="h-4 w-4" />
                             </div>
                           </div>
-                        )}
-                        {item.caption && (
-                          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 opacity-0 transition-opacity group-hover:opacity-100">
-                            <p className="text-sm font-medium text-white">{pick(item.caption, lang)}</p>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
+                        </div>
+                      )}
+                      {item.caption && (
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-4 opacity-0 transition-opacity group-hover:opacity-100">
+                          <p className="text-sm font-medium text-white">{pick(item.caption, lang)}</p>
+                        </div>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </section>
             )}
           </div>
 
-          {/* Right Column: Metadata & Sidebar */}
           <div className="space-y-8">
             <Card>
               <h3 className="mb-4 text-lg font-bold text-neutral-900 border-b border-neutral-100 pb-2">
                 Tech Stack
               </h3>
               <div className="flex flex-wrap gap-2">
-                {project.stack.map((tech) => (
+                {project.stack?.map((tech) => (
                   <span key={tech} className="rounded-lg bg-slate-50 px-3 py-1.5 text-xs font-semibold text-slate-700 border border-slate-200">
                     {tech}
                   </span>
@@ -372,11 +373,10 @@ export function ProjectDetailsClient({ project }: ProjectDetailsClientProps) {
         </div>
       </div>
 
-      {/* Lightbox Modal */}
-      {lightboxIndex !== null && gallery[lightboxIndex] && (
+      {selectedImage && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-sm animate-in fade-in duration-200">
           <button
-            onClick={closeLightbox}
+            onClick={() => setSelectedImage(null)}
             className="absolute top-4 right-4 z-50 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 transition-colors"
           >
             <X className="h-6 w-6" />
@@ -397,27 +397,12 @@ export function ProjectDetailsClient({ project }: ProjectDetailsClientProps) {
           </button>
 
           <div className="relative h-full w-full max-w-7xl p-4 flex items-center justify-center">
-            {gallery[lightboxIndex].type === 'video' ? (
-              <video
-                src={gallery[lightboxIndex].url}
-                controls
-                autoPlay
-                className="max-h-full max-w-full rounded-lg shadow-2xl"
-              />
-            ) : (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img
-                src={gallery[lightboxIndex].url}
-                alt={pick(gallery[lightboxIndex].caption, lang)}
-                className="max-h-full max-w-full rounded-lg shadow-2xl object-contain selection:bg-transparent"
-              />
-            )}
-
-            {gallery[lightboxIndex].caption && (
-              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-6 py-2 text-white backdrop-blur-md text-sm font-medium">
-                {pick(gallery[lightboxIndex].caption, lang)}
-              </div>
-            )}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={selectedImage}
+              alt="Lightbox"
+              className="max-h-full max-w-full rounded-lg shadow-2xl object-contain selection:bg-transparent"
+            />
           </div>
         </div>
       )}

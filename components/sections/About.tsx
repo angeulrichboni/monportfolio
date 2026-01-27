@@ -1,7 +1,7 @@
 "use client";
 import React from 'react';
 import { useI18n } from "../I18nProvider";
-import { GraduationCap, MapPin, Code2, Cpu, Globe, ArrowUpRight } from 'lucide-react';
+import { GraduationCap, MapPin, Code2, Cpu, Globe } from 'lucide-react';
 import { Card } from "../ui/Card";
 
 export function About() {

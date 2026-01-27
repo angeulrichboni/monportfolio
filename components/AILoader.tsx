@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 export default function AILoader() {
     const [progress, setProgress] = useState(0);
@@ -39,7 +39,7 @@ export default function AILoader() {
     }, []);
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gradient-to-br from-slate-950 via-blue-950 to-slate-900 pointer-events-none">
             {/* Animated background particles */}
             <div className="absolute inset-0 overflow-hidden">
                 {dimensions.width > 0 && [...Array(20)].map((_, i) => (
