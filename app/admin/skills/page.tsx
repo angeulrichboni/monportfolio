@@ -1,18 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { Plus, Pencil, Trash2, Cpu, Database, Cloud, Server, Code, Terminal, Layers } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Plus, Pencil, Trash2, Cpu, Database, Cloud, Server, Code, Terminal, Layers, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
-
-const skills = [
-    { id: 1, name: "Python", level: 90, category: "Data Engineering" },
-    { id: 2, name: "SQL", level: 85, category: "Data Engineering" },
-    { id: 3, name: "React", level: 75, category: "Frontend" },
-];
+import { SkillService } from "@/app/services/skill.service";
+import { Skill } from "@/app/types/api";
 
 // Helper pour mapper les icônes/couleurs selon la catégorie (Visuel uniquement)
 const getCategoryStyle = (cat: string) => {
-    switch(cat) {
+    switch (cat) {
         case "Data Engineering": return { icon: Database, color: "text-cyan-500", bg: "bg-cyan-50", bar: "bg-cyan-500" };
         case "Frontend": return { icon: Code, color: "text-pink-500", bg: "bg-pink-50", bar: "bg-pink-500" };
         case "Backend / API": return { icon: Server, color: "text-indigo-500", bg: "bg-indigo-50", bar: "bg-indigo-500" };
@@ -23,9 +20,77 @@ const getCategoryStyle = (cat: string) => {
 };
 
 export default function SkillsList() {
+    const [skills, setSkills] = useState<Skill[]>([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [deletingId, setDeletingId] = useState<string | null>(null);
+
+    // Fetch skills on mount
+    useEffect(() => {
+        loadSkills();
+    }, []);
+
+    const loadSkills = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const data = await SkillService.getAll();
+            setSkills(data);
+        } catch (err) {
+            console.error("Failed to load skills:", err);
+            setError("Impossible de charger les compétences. Vérifiez que le backend est accessible.");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleDelete = async (id: string, name: string) => {
+        if (!confirm(`Êtes-vous sûr de vouloir supprimer "${name}" ?`)) {
+            return;
+        }
+
+        try {
+            setDeletingId(id);
+            await SkillService.delete(id);
+            // Remove from local state
+            setSkills(skills.filter(s => s.id !== id));
+        } catch (err) {
+            console.error("Failed to delete skill:", err);
+            alert("Erreur lors de la suppression. Veuillez réessayer.");
+        } finally {
+            setDeletingId(null);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-slate-50/50 p-6 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-cyan-500/30 border-t-cyan-600 rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-slate-500 font-medium">Chargement des compétences...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-slate-50/50 p-6 flex items-center justify-center">
+                <div className="max-w-md bg-red-50 border border-red-200 rounded-2xl p-6 text-center">
+                    <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-3" />
+                    <h3 className="text-lg font-bold text-red-900 mb-2">Erreur de connexion</h3>
+                    <p className="text-sm text-red-700 mb-4">{error}</p>
+                    <Button onClick={loadSkills} className="bg-red-600 hover:bg-red-700 text-white">
+                        Réessayer
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-slate-50/50 p-6 space-y-8 font-sans">
-            
+
             {/* Header & Actions */}
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-6 relative z-10">
                 <div className="space-y-2">
@@ -45,15 +110,31 @@ export default function SkillsList() {
                 </Link>
             </div>
 
+            {/* Empty State */}
+            {skills.length === 0 && (
+                <div className="text-center py-20">
+                    <Cpu className="w-16 h-16 text-slate-300 mx-auto mb-4" />
+                    <h3 className="text-xl font-bold text-slate-400 mb-2">Aucune compétence</h3>
+                    <p className="text-slate-400 mb-6">Commencez par ajouter votre première compétence.</p>
+                    <Link href="/admin/skills/new">
+                        <Button className="bg-cyan-600 hover:bg-cyan-700 text-white">
+                            <Plus className="w-4 h-4 mr-2" />
+                            Ajouter une compétence
+                        </Button>
+                    </Link>
+                </div>
+            )}
+
             {/* Skills Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                 {skills.map((skill) => {
                     const style = getCategoryStyle(skill.category);
                     const Icon = style.icon;
+                    const isDeleting = deletingId === skill.id;
 
                     return (
-                        <div key={skill.id} className="group relative bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-white/60 shadow-sm hover:shadow-xl hover:shadow-cyan-900/5 transition-all duration-300 hover:-translate-y-1">
-                            
+                        <div key={skill.id} className={`group relative bg-white/80 backdrop-blur-md p-6 rounded-3xl border border-white/60 shadow-sm hover:shadow-xl hover:shadow-cyan-900/5 transition-all duration-300 hover:-translate-y-1 ${isDeleting ? 'opacity-50 pointer-events-none' : ''}`}>
+
                             {/* Actions (Floating Top Right) */}
                             <div className="absolute top-4 right-4 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity translate-x-2 group-hover:translate-x-0">
                                 <Link
@@ -63,7 +144,12 @@ export default function SkillsList() {
                                 >
                                     <Pencil className="w-4 h-4" />
                                 </Link>
-                                <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors" title="Supprimer">
+                                <button
+                                    onClick={() => handleDelete(skill.id, skill.name)}
+                                    className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-colors"
+                                    title="Supprimer"
+                                    disabled={isDeleting}
+                                >
                                     <Trash2 className="w-4 h-4" />
                                 </button>
                             </div>
@@ -88,7 +174,7 @@ export default function SkillsList() {
                                 <div className="h-2.5 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200 relative">
                                     {/* Background stripes for tech effect */}
                                     <div className="absolute inset-0 w-full h-full bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.5)_50%,transparent_75%,transparent_100%)] bg-[length:10px_10px] opacity-30"></div>
-                                    
+
                                     <div
                                         className={`h-full ${style.bar} rounded-full shadow-[0_0_10px_rgba(0,0,0,0.1)] transition-all duration-1000 ease-out`}
                                         style={{ width: `${skill.level}%` }}
