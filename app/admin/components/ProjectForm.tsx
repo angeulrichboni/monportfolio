@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { Sparkles, Save, X, Image as ImageIcon, Plus, Users, Github, ArrowLeft, Languages, UploadCloud, Link as LinkIcon, Film, Trash2, MonitorPlay } from "lucide-react";
 import { Button } from "@/components/ui/Button";
+import { AIService } from "@/app/services/ai.service";
 
 // -- Types mirroring data/projects.ts --
 type LocalizedString = string | { fr: string; en: string };
@@ -34,7 +35,6 @@ export interface ProjectData {
     description: LocalizedString;
     content?: LocalizedString;
     problem_statement?: LocalizedString;
-    architecture?: LocalizedString;
     results?: LocalizedString;
     stack: string[];
     category?: string;
@@ -50,9 +50,11 @@ export interface ProjectData {
 interface ProjectFormProps {
     initialData?: ProjectData;
     isEditing?: boolean;
+    onSubmit?: (data: ProjectData, files: { coverFile: File | null; pendingAssets: Array<{ file: File; type: "image" | "video" }> }) => Promise<void>;
+    isSubmitting?: boolean;
 }
 
-export function ProjectForm({ initialData, isEditing = false }: ProjectFormProps) {
+export function ProjectForm({ initialData, isEditing = false, onSubmit, isSubmitting = false }: ProjectFormProps) {
     // --- State Principal ---
     const [formData, setFormData] = useState<ProjectData>(initialData || {
         slug: "",
@@ -60,11 +62,12 @@ export function ProjectForm({ initialData, isEditing = false }: ProjectFormProps
         description: { fr: "", en: "" },
         content: { fr: "", en: "" },
         problem_statement: { fr: "", en: "" },
-        architecture: { fr: "", en: "" },
         results: { fr: "", en: "" },
         stack: [],
         category: "Fullstack",
         status: "draft",
+        github_url: "",
+        demo_url: "",
         assets: [],
         is_team: false,
         team: []
@@ -76,6 +79,10 @@ export function ProjectForm({ initialData, isEditing = false }: ProjectFormProps
     // --- State pour la section Media (Nouveau) ---
     const [coverMode, setCoverMode] = useState<"url" | "upload">("url");
     const [assetMode, setAssetMode] = useState<"url" | "upload">("url");
+
+    // File state for uploads
+    const [coverFile, setCoverFile] = useState<File | null>(null);
+    const [pendingAssets, setPendingAssets] = useState<Array<{ file: File; type: "image" | "video" }>>([]);
 
     // State temporaire pour l'ajout d'un asset
     const [newAssetUrl, setNewAssetUrl] = useState("");
@@ -92,26 +99,34 @@ export function ProjectForm({ initialData, isEditing = false }: ProjectFormProps
         });
     };
 
-    const handleMagicTranslate = () => {
+    const handleMagicTranslate = async () => {
         setIsTranslating(true);
-        setTimeout(() => {
-            setFormData(prev => {
-                const translate = (loc: LocalizedString) => {
-                    const frVal = getStr(loc, 'fr');
-                    return getStr(loc, 'en') ? loc : { fr: frVal, en: `[AI Translated] ${frVal}` };
-                };
-                return {
-                    ...prev,
-                    title: translate(prev.title),
-                    description: translate(prev.description),
-                    content: translate(prev.content || ""),
-                    problem_statement: translate(prev.problem_statement || ""),
-                    architecture: translate(prev.architecture || ""),
-                    results: translate(prev.results || ""),
-                };
-            });
+        try {
+            const toObj = (val: LocalizedString) => typeof val === 'string' ? { fr: val, en: "" } : val;
+
+            // Translate all text fields in parallel
+            const [titleEn, descEn, contentEn, problemEn, resultsEn] = await Promise.all([
+                AIService.translate(getStr(formData.title, 'fr')),
+                AIService.translate(getStr(formData.description, 'fr')),
+                AIService.translate(getStr(formData.content || "", 'fr')),
+                AIService.translate(getStr(formData.problem_statement || "", 'fr')),
+                AIService.translate(getStr(formData.results || "", 'fr'))
+            ]);
+
+            setFormData(prev => ({
+                ...prev,
+                title: { ...toObj(prev.title), en: titleEn },
+                description: { ...toObj(prev.description), en: descEn },
+                content: { ...toObj(prev.content || ""), en: contentEn },
+                problem_statement: { ...toObj(prev.problem_statement || ""), en: problemEn },
+                results: { ...toObj(prev.results || ""), en: resultsEn }
+            }));
+        } catch (err) {
+            console.error('Translation failed:', err);
+            alert('Erreur de traduction. Veuillez réessayer.');
+        } finally {
             setIsTranslating(false);
-        }, 1500);
+        }
     };
 
     const addTag = () => {
@@ -133,6 +148,32 @@ export function ProjectForm({ initialData, isEditing = false }: ProjectFormProps
     };
 
     // --- Helpers pour Assets ---
+    const handleCoverFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setCoverFile(file);
+            // Create preview URL
+            const previewUrl = URL.createObjectURL(file);
+            setFormData(prev => ({ ...prev, cover_image_url: previewUrl }));
+        }
+    };
+
+    const handleAssetFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            // Determine type from MIME
+            const type = file.type.startsWith('video/') ? 'video' : 'image';
+            setPendingAssets(prev => [...prev, { file, type }]);
+
+            // Add preview to assets
+            const previewUrl = URL.createObjectURL(file);
+            setFormData(prev => ({
+                ...prev,
+                assets: [...(prev.assets || []), { type, url: previewUrl }]
+            }));
+        }
+    };
+
     const addAsset = () => {
         if (!newAssetUrl) return; // En mode upload, on gérerait le fichier ici
         const asset: ProjectAsset = { type: newAssetType, url: newAssetUrl };
@@ -177,9 +218,21 @@ export function ProjectForm({ initialData, isEditing = false }: ProjectFormProps
                     <Link href="/admin/projects">
                         <Button variant="ghost" className="text-slate-600 hover:bg-slate-100 rounded-xl">Annuler</Button>
                     </Link>
-                    <Button className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white shadow-lg shadow-indigo-500/25 rounded-xl px-6">
+                    <Button
+                        onClick={async () => {
+                            if (onSubmit) {
+                                try {
+                                    await onSubmit(formData, { coverFile, pendingAssets });
+                                } catch {
+                                    // Error handled by parent
+                                }
+                            }
+                        }}
+                        disabled={isSubmitting}
+                        className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white shadow-lg shadow-indigo-500/25 rounded-xl px-6"
+                    >
                         <Save className="w-4 h-4 mr-2" />
-                        Sauvegarder
+                        {isSubmitting ? 'Enregistrement...' : 'Sauvegarder'}
                     </Button>
                 </div>
             </div>
@@ -242,6 +295,40 @@ export function ProjectForm({ initialData, isEditing = false }: ProjectFormProps
                                         <option value="archived">Archived (Masqué)</option>
                                     </select>
                                     <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">▼</div>
+                                </div>
+                            </div>
+
+                            {/* GitHub URL */}
+                            <div>
+                                <label className={labelClass}>
+                                    <Github className="w-3.5 h-3.5 inline mr-1.5" />
+                                    GitHub URL
+                                </label>
+                                <div className="relative group">
+                                    <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
+                                    <input
+                                        className={`${inputClass} pl-10`}
+                                        placeholder="https://github.com/username/repo"
+                                        value={formData.github_url || ""}
+                                        onChange={e => setFormData({ ...formData, github_url: e.target.value })}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Demo URL */}
+                            <div>
+                                <label className={labelClass}>
+                                    <MonitorPlay className="w-3.5 h-3.5 inline mr-1.5" />
+                                    Demo URL
+                                </label>
+                                <div className="relative group">
+                                    <LinkIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
+                                    <input
+                                        className={`${inputClass} pl-10`}
+                                        placeholder="https://demo.example.com"
+                                        value={formData.demo_url || ""}
+                                        onChange={e => setFormData({ ...formData, demo_url: e.target.value })}
+                                    />
                                 </div>
                             </div>
                         </div>
@@ -472,10 +559,16 @@ export function ProjectForm({ initialData, isEditing = false }: ProjectFormProps
                                         />
                                     </div>
                                 ) : (
-                                    <div className="border-2 border-dashed border-indigo-100 rounded-xl p-4 flex flex-col items-center justify-center text-center hover:border-indigo-400 hover:bg-indigo-50/30 transition-all cursor-pointer group bg-slate-50/30">
+                                    <label className="border-2 border-dashed border-indigo-100 rounded-xl p-4 flex flex-col items-center justify-center text-center hover:border-indigo-400 hover:bg-indigo-50/30 transition-all cursor-pointer group bg-slate-50/30">
+                                        <input
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleCoverFileSelect}
+                                            className="hidden"
+                                        />
                                         <UploadCloud className="w-6 h-6 text-indigo-300 group-hover:text-indigo-500 mb-1 transition-colors" />
                                         <span className="text-[10px] font-bold text-slate-500">Glisser image principale</span>
-                                    </div>
+                                    </label>
                                 )}
 
                                 {/* Preview Cover */}
@@ -548,7 +641,13 @@ export function ProjectForm({ initialData, isEditing = false }: ProjectFormProps
                                         </Button>
                                     </div>
                                 ) : (
-                                    <div className="border-2 border-dashed border-indigo-100 rounded-xl p-4 flex flex-col items-center justify-center text-center hover:border-indigo-400 hover:bg-indigo-50/30 transition-all cursor-pointer group bg-slate-50/30">
+                                    <label className="border-2 border-dashed border-indigo-100 rounded-xl p-4 flex flex-col items-center justify-center text-center hover:border-indigo-400 hover:bg-indigo-50/30 transition-all cursor-pointer group bg-slate-50/30">
+                                        <input
+                                            type="file"
+                                            accept="image/*,video/*"
+                                            onChange={handleAssetFileSelect}
+                                            className="hidden"
+                                        />
                                         <div className="flex gap-4 mb-1">
                                             <label className="flex items-center gap-1 text-[10px] font-bold text-slate-400 cursor-pointer hover:text-indigo-500">
                                                 <input type="radio" name="uploadType" checked={newAssetType === 'image'} onChange={() => setNewAssetType('image')} className="accent-indigo-500" /> Image
@@ -559,7 +658,7 @@ export function ProjectForm({ initialData, isEditing = false }: ProjectFormProps
                                         </div>
                                         <UploadCloud className="w-6 h-6 text-indigo-300 group-hover:text-indigo-500 transition-colors" />
                                         <span className="text-[10px] font-bold text-slate-500 mt-1">Glisser pour ajouter</span>
-                                    </div>
+                                    </label>
                                 )}
 
                                 {/* Assets List */}
