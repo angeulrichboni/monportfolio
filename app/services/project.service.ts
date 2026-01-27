@@ -17,7 +17,6 @@ export const adaptToFrontend = (apiProject: Project): ProjectData => {
         description: { fr: apiProject.description_fr, en: apiProject.description_en },
         content: { fr: apiProject.content_fr || "", en: apiProject.content_en || "" },
         problem_statement: { fr: apiProject.problem_statement_fr || "", en: apiProject.problem_statement_en || "" },
-        architecture: { fr: apiProject.architecture_fr || "", en: apiProject.architecture_en || "" },
         results: { fr: apiProject.results_fr || "", en: apiProject.results_en || "" },
         stack: apiProject.stack,
         category: apiProject.category,
@@ -52,8 +51,6 @@ export const adaptToBackend = (formData: ProjectData): ProjectCreate => {
         content_en: getString(formData.content, 'en'),
         problem_statement_fr: getString(formData.problem_statement, 'fr'),
         problem_statement_en: getString(formData.problem_statement, 'en'),
-        architecture_fr: getString(formData.architecture, 'fr'),
-        architecture_en: getString(formData.architecture, 'en'),
         results_fr: getString(formData.results, 'fr'),
         results_en: getString(formData.results, 'en'),
         stack: formData.stack,
@@ -100,5 +97,47 @@ export const ProjectService = {
 
     delete: async (id: string) => {
         await apiClient.delete(`${RESOURCE}/${id}`);
+    },
+
+    /**
+     * Upload a project asset (cover or gallery item)
+     * @param file - File to upload
+     * @param projectSlug - Project slug for organization
+     * @param fileType - "image", "video", or "cover"
+     * @returns Public URL of uploaded file
+     */
+    uploadAsset: async (file: File, projectSlug: string, fileType: "image" | "video" | "cover"): Promise<string> => {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("project_slug", projectSlug);
+        formData.append("file_type", fileType);
+
+        const response = await apiClient.post<{ url: string; file_path: string; message: string }>(
+            "/upload/project-asset",
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            }
+        );
+
+        return response.data.url;
+    },
+
+    /**
+     * Delete a project asset
+     * @param fileUrl - Public URL of the file to delete
+     */
+    deleteAsset: async (fileUrl: string): Promise<void> => {
+        const formData = new FormData();
+        formData.append("file_url", fileUrl);
+
+        await apiClient.delete("/upload/project-asset", {
+            data: formData,
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
     }
 };

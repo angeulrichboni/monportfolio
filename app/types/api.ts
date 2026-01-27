@@ -30,8 +30,6 @@ export interface Project {
     content_en?: string;
     problem_statement_fr?: string;
     problem_statement_en?: string;
-    architecture_fr?: string;
-    architecture_en?: string;
     results_fr?: string;
     results_en?: string;
     stack: string[];
@@ -57,8 +55,6 @@ export interface ProjectCreate {
     content_en?: string;
     problem_statement_fr?: string;
     problem_statement_en?: string;
-    architecture_fr?: string;
-    architecture_en?: string;
     results_fr?: string;
     results_en?: string;
     stack?: string[];
