@@ -16,6 +16,7 @@ export interface SkillData {
 interface SkillFormProps {
     initialData?: SkillData;
     isEditing?: boolean;
+    onSubmit?: (data: SkillData) => Promise<void>;
 }
 
 // Helper pour le style visuel de la preview
@@ -30,12 +31,37 @@ const getCategoryStyle = (cat: string) => {
     }
 };
 
-export function SkillForm({ initialData, isEditing = false }: SkillFormProps) {
+export function SkillForm({ initialData, isEditing = false, onSubmit }: SkillFormProps) {
     const [formData, setFormData] = useState<SkillData>(initialData || {
         name: "",
         level: 50,
         category: "Data Engineering"
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleSubmit = async () => {
+        if (!formData.name.trim()) {
+            setError("Le nom de la compétence est requis");
+            return;
+        }
+
+        if (!onSubmit) {
+            console.warn("No onSubmit handler provided");
+            return;
+        }
+
+        try {
+            setIsSubmitting(true);
+            setError(null);
+            await onSubmit(formData);
+        } catch (err) {
+            console.error("Failed to save skill:", err);
+            setError("Erreur lors de la sauvegarde. Veuillez réessayer.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
 
     // Preview Logic
     const style = getCategoryStyle(formData.category);
@@ -74,12 +100,16 @@ export function SkillForm({ initialData, isEditing = false }: SkillFormProps) {
 
                     <div className="relative">
                         <label className={labelClass}>Nom de la compétence</label>
+                        {error && (
+                            <p className="text-xs text-red-600 mb-2 font-medium">{error}</p>
+                        )}
                         <input
                             type="text"
                             placeholder="Ex: Python, Kubernetes..."
                             value={formData.name}
                             onChange={e => setFormData({ ...formData, name: e.target.value })}
                             className={`${inputClass} font-bold text-slate-700`}
+                            disabled={isSubmitting}
                         />
                     </div>
 
@@ -140,11 +170,24 @@ export function SkillForm({ initialData, isEditing = false }: SkillFormProps) {
 
                     <div className="pt-6 flex gap-3">
                         <Link href="/admin/skills" className="flex-1">
-                            <Button variant="ghost" className="w-full text-slate-500 hover:bg-slate-100 rounded-xl">Annuler</Button>
+                            <Button variant="ghost" className="w-full text-slate-500 hover:bg-slate-100 rounded-xl" disabled={isSubmitting}>Annuler</Button>
                         </Link>
-                        <Button className="flex-[2] bg-slate-900 hover:bg-slate-800 text-white shadow-lg shadow-slate-900/20 rounded-xl">
-                            <Save className="w-4 h-4 mr-2" />
-                            Sauvegarder
+                        <Button
+                            onClick={handleSubmit}
+                            disabled={isSubmitting}
+                            className="flex-[2] bg-slate-900 hover:bg-slate-800 text-white shadow-lg shadow-slate-900/20 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {isSubmitting ? (
+                                <>
+                                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2"></div>
+                                    Enregistrement...
+                                </>
+                            ) : (
+                                <>
+                                    <Save className="w-4 h-4 mr-2" />
+                                    Sauvegarder
+                                </>
+                            )}
                         </Button>
                     </div>
 
